@@ -1,4 +1,4 @@
-import TaskCard from '../../components/taskCard/TaskCard';
+import TaskCard from '../taskCard/TaskCard';
 
 const TasksPage = ({ tasks = [] }: { tasks?: ITask[] }) => {
   return (
