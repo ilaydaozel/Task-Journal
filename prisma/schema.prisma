@@ -14,13 +14,13 @@ datasource db {
 }
 
 model Task {
-  id              String   @id @default(cuid()) @map("_id") @db.ObjectId
-  name            String
-  description     String
-  acceptanceCriteria String
-  deadline        DateTime
-  status          String   @default("to-do")
-  comments        String[]
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id                 String   @id @default(cuid()) @map("_id") @db.ObjectId
+  name               String
+  description        String? 
+  acceptanceCriteria String?
+  deadline           DateTime? 
+  status             String?   @default("to-do") 
+  comments           String[] 
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
