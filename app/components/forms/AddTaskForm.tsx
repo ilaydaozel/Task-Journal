@@ -19,18 +19,15 @@ const AddTaskForm = ({ isOpen, onClose }: AddTaskFormProps) => {
     name: '',
     description: '',
     acceptanceCriteria: '',
-    deadline: '',
+    startedAt: '',
+    completedAt: '',
+    deadlineAt: '',
     status: '',
     comments: '',
+    weekNumber: '',
   });
   const router = useRouter();
-  // Check if the element exists before setting the app element
-  useEffect(() => {
-    const appElement = document.getElementById('taskListComponent');
-    if (appElement) {
-      Modal.setAppElement('#taskListComponent');
-    }
-  }, []);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -42,11 +39,15 @@ const AddTaskForm = ({ isOpen, onClose }: AddTaskFormProps) => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await handleApiResponse(
-        axios.post('/api/task/createTask', formData),
-        router,
-        "Add successful"
-      );
+      const response = axios.post('/api/task/createTask', {
+        ...formData,
+        startedAt: new Date(formData.startedAt),
+        completedAt: new Date(formData.completedAt),
+        deadlineAt: new Date(formData.deadlineAt),
+        comments: formData.comments.split(',').map((comment: string) => comment.trim()),
+        weekNumber: parseInt(formData.weekNumber),
+      });
+      await handleApiResponse(response, router, "Add successful");
       onClose(); // Close the modal after successful submission
     } catch (error) {
       console.error('Error adding task:', error);
@@ -82,22 +83,46 @@ const AddTaskForm = ({ isOpen, onClose }: AddTaskFormProps) => {
                 onChange={handleChange}
               />
               <InputField 
-                label="Deadline"
-                name="deadline"
-                value={formData.deadline}
+                label="Start Date"
+                name="startedAt"
+                value={formData.startedAt}
                 onChange={handleChange}
-                type='date'
+                required
+                type="date"
               />
+              <InputField 
+                label="Completed At"
+                name="completedAt"
+                value={formData.completedAt}
+                onChange={handleChange}
+                required
+                type="date"
+              />
+              <InputField 
+                label="Deadline"
+                name="deadlineAt"
+                value={formData.deadlineAt}
+                onChange={handleChange}
+                required
+                type="date"
+              />
+              <InputField 
+                label="Week Number"
+                name="weekNumber"
+                value={formData.weekNumber}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className='flex flex-col gap-4'>
               <InputField 
                 label="Status"
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
               />
-            </div>
-            <div className='flex flex-col gap-4'>
               <InputField 
-                label="Comments"
+                label="Comments (comma-separated)"
                 name="comments"
                 value={formData.comments}
                 onChange={handleChange}
