@@ -11,7 +11,7 @@ const TasksPage = ({ tasks = [] }: { tasks?: ITask[] }) => {
   return (
     <div id="taskListComponent" className="container mx-auto p-8 flex flex-col gap-8">
       <div className='text-right'>
-        <Button onClick={openModal} label='Add Program'></Button>      
+        <Button onClick={openModal} label='Add Task'></Button>      
         <AddTaskForm isOpen={isModalOpen} onClose={closeModal} />
       </div>
       <h1 className="text-2xl font-bold mb-4">Your Tasks</h1>

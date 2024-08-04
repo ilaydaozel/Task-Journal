@@ -24,7 +24,7 @@ export default function RootLayout({
       <Suspense fallback={<Loading />}>
         <ToasterProvider />
         <Navbar></Navbar>
-        <div className="bg-bg-100 text-text1-800">
+        <div className="bg-bg-50 text-text1-800">
           {children}
         </div>
       </Suspense></body>
