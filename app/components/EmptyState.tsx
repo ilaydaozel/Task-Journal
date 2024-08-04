@@ -19,7 +19,7 @@ const EmptyState = ({ item }: EmptyStateProps) => {
     >
       <div className='text-center'>
         <div className='text-2xl text-neutral-500'>
-          Empty state
+          There are no {item}s.
         </div>
       </div>
     </div>
