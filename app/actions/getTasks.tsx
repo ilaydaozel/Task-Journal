@@ -7,7 +7,7 @@ export default async function getAllTasks(): Promise<ITask[]> {
     if (!tasksData || !Array.isArray(tasksData)) {
       return []; // Return an empty array if no tasks found
     }
-    return tasksData;
+    return tasksData as unknown as ITask[];
   } catch (error: any) {
     console.error('Error fetching tasks:', error);
     throw new Error(error);
