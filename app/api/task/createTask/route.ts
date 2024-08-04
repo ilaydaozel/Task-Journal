@@ -20,7 +20,7 @@ export async function POST(request: Request) {
                 acceptanceCriteria: acceptanceCriteria,
                 deadline: new Date(deadline),
                 status: status,
-                comments: comments,
+                comments: [],
             },
         });
         return NextResponse.json(task);

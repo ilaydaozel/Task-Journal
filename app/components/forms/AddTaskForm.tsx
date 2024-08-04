@@ -81,6 +81,7 @@ const AddTaskForm = ({ isOpen, onClose }: AddTaskFormProps) => {
                 name="deadline"
                 value={formData.deadline}
                 onChange={handleChange}
+                type='date'
               />
               <InputField 
                 label="Status"
