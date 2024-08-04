@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import Button from '../formComponents/Button';
 import { handleApiResponse } from '@/app/utils/Helper';
@@ -8,7 +8,6 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import InputField from '../formComponents/InputField';
 
-Modal.setAppElement('#taskListPage');
 
 interface AddTaskFormProps {
   isOpen: boolean;
@@ -25,7 +24,13 @@ const AddTaskForm = ({ isOpen, onClose }: AddTaskFormProps) => {
     comments: '',
   });
   const router = useRouter();
-
+  // Check if the element exists before setting the app element
+  useEffect(() => {
+    const appElement = document.getElementById('taskListComponent');
+    if (appElement) {
+      Modal.setAppElement('#taskListComponent');
+    }
+  }, []);
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({

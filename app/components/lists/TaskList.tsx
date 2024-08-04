@@ -9,7 +9,7 @@ const TasksPage = ({ tasks = [] }: { tasks?: ITask[] }) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   return (
-    <div className="container mx-auto p-8 flex flex-col gap-8">
+    <div id="taskListComponent" className="container mx-auto p-8 flex flex-col gap-8">
       <div className='text-right'>
         <Button onClick={openModal} label='Add Program'></Button>      
         <AddTaskForm isOpen={isModalOpen} onClose={closeModal} />

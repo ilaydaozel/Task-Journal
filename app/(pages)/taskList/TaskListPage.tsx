@@ -5,7 +5,7 @@ import TaskList from '../../components/lists/TaskList';
 
 const TaskListPage = ({tasks}:{tasks: ITask[]}) => {
   return (
-    <div id="taskListPage" className='flex flex-col items-end gap-2 w-[95vw]'>
+    <div className='flex flex-col items-end gap-2 w-[95vw]'>
       <TaskList tasks={tasks} />
     </div>
   );
