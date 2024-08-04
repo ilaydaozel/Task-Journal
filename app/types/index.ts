@@ -8,7 +8,7 @@ interface ITask {
   deadlineAt: Date;               // Deadline for the task
   status: string;                 // Current status of the task
   comments: string[];             // List of comments associated with the task                // Weeks the task belongs to
-  weekIds: String[]; //
+  weekIds: String[];
   createdAt: Date;                // Timestamp when the task was created
   updatedAt: Date;                // Timestamp when the task was last updated
 }
