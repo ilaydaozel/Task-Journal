@@ -1,4 +1,4 @@
-import TaskCard from '../taskCard/TaskCard';
+import TaskCard from '../views/week/WeeklyTaskCard';
 import Button from '@/app/components/formComponents/Button';
 import AddTaskForm from '@/app/components/forms/AddTaskForm';
 import { useState } from 'react';
