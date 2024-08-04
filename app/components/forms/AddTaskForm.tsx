@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import InputField from '../formComponents/InputField';
 
-Modal.setAppElement('#tasksPage');
+Modal.setAppElement('#taskListPage');
 
 interface AddTaskFormProps {
   isOpen: boolean;

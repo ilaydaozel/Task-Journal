@@ -10,7 +10,7 @@ const TasksPage = async () => {
   try{
     const tasksData = await getAllTasks();
     return (
-      <div id="tasksPage" className='w-full flex flex-col items-center justify-center '>
+      <div className='w-full flex flex-col items-center justify-center '>
         <h1>Welcome to Task-Journal</h1>
         <TaskListPage tasks={tasksData}></TaskListPage>
       </div>
