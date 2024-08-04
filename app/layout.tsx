@@ -4,6 +4,7 @@ import "./globals.css";
 import ToasterProvider from "./providers/ToasterProvider";
 import { Suspense } from "react";
 import Loading from "./loading";
+import Navbar from "./components/navbar/Navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +23,10 @@ export default function RootLayout({
       <body className={inter.className}>      
       <Suspense fallback={<Loading />}>
         <ToasterProvider />
-        {children}
+        <Navbar></Navbar>
+        <div className="bg-bg-100 text-text1-800">
+          {children}
+        </div>
       </Suspense></body>
 
     
