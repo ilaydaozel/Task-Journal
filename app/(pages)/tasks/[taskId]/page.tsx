@@ -13,7 +13,9 @@ const TaskPage = async ({ params }: { params: IParams }) => {
     task = await getTaskById(params);
     if (task) {
       return (
+        <div className='min-h-screen max-w-screen flex flex-col items-center justify-center'>
           <Task task={task}/>
+        </div>
       );
     } else {
       return (
