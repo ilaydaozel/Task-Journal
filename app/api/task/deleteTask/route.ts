@@ -1,16 +1,27 @@
 import { NextResponse } from "next/server";
 import prisma from "@/app/lib/prismadb";
 
-export async function DELETE(request: Request) {
-    const { id } = await request.json();
+export async function PUT(request: Request) {
+    const { id, fieldName, fieldValue } = await request.json();
     try {
-        // Find the task by ID and delete it
-        const deletedTask = await prisma.task.delete({
+        // Find the task by ID
+        const existingTask = await prisma.task.findUnique({
             where: { id: id }
         });
-        return NextResponse.json(deletedTask);
+        if (!existingTask) {
+            return NextResponse.error();
+        }
+
+        // Update the specified field
+        const updatedTask = await prisma.task.update({
+            where: { id: id },
+            data: {
+                [fieldName]: fieldValue
+            }
+        });
+        return NextResponse.json(updatedTask);
     } catch (error) {
-        console.error("Error deleting the task:", error);
-        return NextResponse.json({ error: "An error occurred while deleting the task: " + error });
+        console.error("Error updating the task:", error);
+        return NextResponse.error();
     }
 }
