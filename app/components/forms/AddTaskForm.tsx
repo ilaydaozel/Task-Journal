@@ -24,7 +24,6 @@ const AddTaskForm = ({ isOpen, onClose }: AddTaskFormProps) => {
     deadlineAt: '',
     status: '',
     comments: '',
-    weekNumber: '',
   });
   const router = useRouter();
 
@@ -36,6 +35,7 @@ const AddTaskForm = ({ isOpen, onClose }: AddTaskFormProps) => {
     }));
   };
 
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -45,7 +45,6 @@ const AddTaskForm = ({ isOpen, onClose }: AddTaskFormProps) => {
         completedAt: new Date(formData.completedAt),
         deadlineAt: new Date(formData.deadlineAt),
         comments: formData.comments.split(',').map((comment: string) => comment.trim()),
-        weekNumber: parseInt(formData.weekNumber),
       });
       await handleApiResponse(response, router, "Add successful");
       onClose(); // Close the modal after successful submission
@@ -105,13 +104,6 @@ const AddTaskForm = ({ isOpen, onClose }: AddTaskFormProps) => {
                 onChange={handleChange}
                 required
                 type="date"
-              />
-              <InputField 
-                label="Week Number"
-                name="weekNumber"
-                value={formData.weekNumber}
-                onChange={handleChange}
-                required
               />
             </div>
             <div className='flex flex-col gap-4'>
