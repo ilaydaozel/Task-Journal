@@ -7,7 +7,8 @@ interface ITask {
   completedAt: Date;              // Completion date of the task
   deadlineAt: Date;               // Deadline for the task
   status: string;                 // Current status of the task
-  comments: string[];             // List of comments associated with the task                // Weeks the task belongs to
+  comments: string[];             // List of comments associated with the task                
+  week: IWeek[]; // Weeks the task belongs to
   weekIds: String[];
   createdAt: Date;                // Timestamp when the task was created
   updatedAt: Date;                // Timestamp when the task was last updated
@@ -18,6 +19,7 @@ interface IWeek {
   weekNumber: number;             // Week number (1-52)
   year: number;                   // Year
   taskIds: String[];
+  tasks: ITask[];                  // Tasks in the week
   createdAt: Date;                // Timestamp when the week was created
   updatedAt: Date;                // Timestamp when the week was last updated
 }

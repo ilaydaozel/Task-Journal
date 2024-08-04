@@ -17,7 +17,7 @@ const config: Config = {
     },
     colors: {
       ...colors,
-      primary: colors.green,
+      primary: colors.pink,
       secondary: colors.sky,
       bg: colors.slate,
       text1: colors.gray,
