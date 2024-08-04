@@ -17,11 +17,7 @@ const WeekView = ({ week}: { week?: IWeek }) => {
         <Button onClick={openModal} label='Add Task'></Button>      
         <AddTaskForm isOpen={isModalOpen} onClose={closeModal} />
       </div>
-<<<<<<< Updated upstream:app/components/views/week/WeekView.tsx
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-=======
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
->>>>>>> Stashed changes:app/components/views/WeekView.tsx
       {week && week.days && week.days.length > 0 ? (
           week.days.map((day) => (
             <WeekDayCard key={day.id} day={day} />
