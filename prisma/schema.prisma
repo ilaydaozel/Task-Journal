@@ -23,8 +23,20 @@ model Task {
   deadlineAt        DateTime
   status            String   @default("to-do")
   comments          String[]
-  weeks             Week[]   @relation(fields: [weekIds], references: [id])
-  weekIds           String[] @db.ObjectId
+  workedOnDays      Day[]    @relation(fields: [workedOnDayIds], references: [id])
+  workedOnDayIds    String[]  @db.ObjectId
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Day {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  date              DateTime @unique
+  dayNumber         Int
+  tasks             Task[]   @relation(fields: [taskIds], references: [id])
+  taskIds           String[]  @db.ObjectId
+  week              Week      @relation(fields: [weekId], references: [id], onDelete: Cascade)
+  weekId            String    @db.ObjectId
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }
@@ -33,8 +45,10 @@ model Week {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   weekNumber        Int
   year              Int
-  tasks             Task[]   @relation(fields: [taskIds], references: [id])
-  taskIds           String[] @db.ObjectId
+  days              Day[]
+  dayIds            String[]  @db.ObjectId
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+
+  @@unique([year, weekNumber]) // Composite unique constraint
 }
