@@ -10,6 +10,8 @@ const WeekPage = async ({ params }: { params: IParams }) => {
   let week: IWeek | null = null;
   try {
     week = await getWeekByWeekId({weekId: params.weekId});
+    console.log("current week:", week);
+  
     if (week) {
       return (
         <div className='min-h-screen max-w-screen mt-16 flex flex-col items-center'>
