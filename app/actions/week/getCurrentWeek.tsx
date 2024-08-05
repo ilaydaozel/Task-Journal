@@ -38,7 +38,7 @@ export default async function getCurrentWeek(): Promise<IWeek | null> {
                 },
             });
 
-            return week as IWeek
+            return week as unknown as IWeek
         }
 
         // If no day is found, return nulls for all

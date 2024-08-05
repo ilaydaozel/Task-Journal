@@ -39,12 +39,12 @@ const Navbar = async ({currentDate, years}: {currentDate: IDayDetails, years: IY
       title: "Month",
       path: `/month/${currentDate.month && currentDate.month.id}`,
     },
-    */
+
     {
       title: "Week",
       path: `/week`,
     },
-    /*
+    
     {
       title: "Day",
       path: `/day/${currentDate.day && currentDate.day.id}`,
