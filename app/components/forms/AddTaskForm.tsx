@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import Button from '../formComponents/Button';
 import { handleApiResponse } from '@/app/utils/Helper';
@@ -24,7 +24,13 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
   });
   const [selectedWorkedOnDayIds, setSelectedWorkedOnDayIds] = useState<string[]>([]); // State for worked on days
   const router = useRouter();
-
+  // Check if the element exists before setting the app element
+  useEffect(() => {
+    const appElement = document.getElementById('navbar');
+    if (appElement) {
+      Modal.setAppElement('#navbar');
+    }
+  }, []);
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
