@@ -15,6 +15,7 @@ const EmptyState = ({ item }: EmptyStateProps) => {
         gap-2 
         justify-center 
         items-center 
+        bg-secondary-600
       '
     >
       <div className='text-center'>
