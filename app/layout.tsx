@@ -7,6 +7,7 @@ import Loading from "./loading";
 import Navbar from "./components/navbar/Navbar";
 import getAllYears from "./actions/year/getAllYears";
 import getCurrentDateObjects from "./actions/date/getCurrentDateObjects";
+import getDayByDate from "./actions/day/getDayByDate";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,9 @@ export default async function RootLayout({
   const today = new Date();
   const currentDateObjects = await getCurrentDateObjects({date: new Date(today.getFullYear(), today.getMonth(), today.getDate())});
   const years = await getAllYears();
+  const date = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  const day = await getDayByDate({date: date})
+  console.log("day", day);
   return (
   <html lang="en">
     <body className={inter.className}>      

@@ -1,4 +1,4 @@
-import { getStatusClassName } from '@/app/utils/Helper';
+import { getStatusClassName } from '@/app/utils/helper';
 import Link from 'next/link';
 import React from 'react';
 

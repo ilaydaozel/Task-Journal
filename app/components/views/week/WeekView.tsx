@@ -1,9 +1,9 @@
 "use client";
 
-import { printStringDateDM } from '@/app/utils/Helper';
+import { printStringDateDM } from '@/app/utils/helper';
 import WeekDayCard from './WeekDayCard';
 
-const WeekView = ({ week}: { week?: IWeek }) => {
+const WeekView = ({ week}: { week: IWeek | null }) => {
   console.log("week:", week)
   return (
     <div id="taskListComponent" className="w-full min-h-screen flex flex-col gap-4 items-center mx-auto p-10 md:px-24 md:py-10 bg-primary">

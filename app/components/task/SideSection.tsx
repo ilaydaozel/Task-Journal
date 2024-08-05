@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
-import { getStatusClassName, handleApiResponse } from "@/app/utils/Helper";
+import { getStatusClassName, handleApiResponse } from "@/app/utils/helper";
 import { useRouter } from "next/navigation";
 
 const SideSection = ({ task }: { task: ITask }) => {

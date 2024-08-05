@@ -3,7 +3,7 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import Button from '../formComponents/Button';
-import { handleApiResponse } from '@/app/utils/Helper';
+import { handleApiResponse } from '@/app/utils/helper';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import InputField from '../formComponents/InputField';

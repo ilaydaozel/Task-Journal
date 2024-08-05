@@ -1,4 +1,4 @@
-import { getDayOfTheWeek, getMonthName } from '@/app/utils/Helper';
+import { getDayOfTheWeek, getMonthName } from '@/app/utils/helper';
 import React from 'react';
 import WeeklyTaskCard from './WeeklyTaskCard';
 

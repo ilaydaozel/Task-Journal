@@ -1,6 +1,6 @@
 "use client";
 
-import { printStringDateDMYD } from '@/app/utils/Helper';
+import { printStringDateDMYD } from '@/app/utils/helper';
 import DailyTaskCard from './DailyTaskCard';
 
 const DayView = ({day}: { day?: IDay }) => {
