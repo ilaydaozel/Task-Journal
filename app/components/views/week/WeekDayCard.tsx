@@ -10,7 +10,7 @@ const WeekDayCard = ({ day }: { day: IDay }) => {
       {getDayOfTheWeek(day.date.getDay())}, {day.date.getDate()} {getMonthName(day.date.getMonth())}
     </h2>
     <div className="mt-2 md:gap-6 grid md:grid-cols-2">
-      {day.tasks.length > 0 && (
+      {day.tasks && day.tasks.length > 0 && (
         day.tasks.map((task) => (
           <WeeklyTaskCard key={task.id} task={task} />
         ))

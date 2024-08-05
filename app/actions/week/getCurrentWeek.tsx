@@ -1,17 +1,14 @@
 import prisma from "@/app/lib/prismadb";
 
-interface IDateParams {
-    date: Date; // Date object for the specific day
-}
-
-interface IDayDetails {
+interface IWeekDetails {
     day: IDay | null;
     week: IWeek | null;
 }
 
-export default async function getCurrentWeek(params: IDateParams): Promise<IDayDetails> {
+export default async function getCurrentWeek(): Promise<IWeekDetails> {
     try {
-        const { date } = params;
+        const today = new Date()
+        const date = new Date(today.getFullYear(), today.getMonth(), today.getDate())
         // Ensure the date is a valid Date object
         if (!date || isNaN(date.getTime())) {
             throw new Error("Invalid date provided.");
@@ -28,9 +25,22 @@ export default async function getCurrentWeek(params: IDateParams): Promise<IDayD
             },
         });
 
+
         // If the day is found, extract the related week, month, and year
         if (day) {
-            const week = day.week; // Already included
+            const week = await prisma.week.findUnique({
+                where: {
+                    id: day?.weekId, // Match the date
+                },
+                include: {
+                    days: {
+                        include: {
+                            tasks: true, // Include tasks associated with the day
+                            week: true,
+                        },
+                    }
+                },
+            });
 
             return {
                 day: day as IDay,

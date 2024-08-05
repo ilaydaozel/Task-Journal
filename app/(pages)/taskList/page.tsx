@@ -13,8 +13,6 @@ const TasksPage = async () => {
         </div>
       );
     }
-
-
   }catch (error: any) {
     throw new Error(error);
   }

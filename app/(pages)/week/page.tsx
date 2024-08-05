@@ -1,21 +1,18 @@
+import getCurrentWeek from '@/app/actions/week/getCurrentWeek';
 import getWeekById from '@/app/actions/week/getWeekById';
 import EmptyState from '@/app/components/EmptyState';
 import WeekView from '@/app/components/views/week/WeekView';
 
-interface IParams {
-  weekId?: string;
-}
 
-const WeekPage = async ({ params }: { params: IParams }) => {
-  let week: IWeek | null = null;
+const WeekPage = async () => {
   try {
-    week = await getWeekById({weekId: params.weekId});
-    console.log("current week:", week);
+    const week = await getCurrentWeek()
+    console.log("current week:", week.week);
   
-    if (week) {
+    if (week.week) {
       return (
         <div className='min-h-screen max-w-screen mt-16 flex flex-col items-center'>
-          <WeekView week={week}/>
+          <WeekView week={week.week}/>
         </div>
       );
     } else {

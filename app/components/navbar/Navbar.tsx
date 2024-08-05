@@ -28,7 +28,7 @@ const Navbar = ({currentDate, years}: {currentDate: IDayDetails, years: IYear[]}
     },
     {
       title: "Week",
-      path: `/week/${currentDate.week && currentDate.week.id}`,
+      path: `/week`,
     },
     {
       title: "Day",
