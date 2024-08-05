@@ -9,6 +9,9 @@ const DescriptionSection = ({ task }: { task: ITask }) => {
           <div className="mb-4">
             <div className="mt-2 text-gray-700">
               <strong>Description:</strong> {task?.description || "No description available."}
+              <div className="mt-2 text-gray-700">
+              <strong>Acceptance Criteria:</strong> {task?.acceptanceCriteria || "No acceptance criteria provided."}
+            </div>
             </div>
           </div>
         </div>

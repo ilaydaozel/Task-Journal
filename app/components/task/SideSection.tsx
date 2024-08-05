@@ -53,9 +53,6 @@ const SideSection = ({ task }: { task: ITask }) => {
                 <option value="done" className="bg-green-500">Done</option>
             </select>
             <div className="mt-2 text-gray-700">
-              <strong>Acceptance Criteria:</strong> {task?.acceptanceCriteria || "No acceptance criteria provided."}
-            </div>
-            <div className="mt-2 text-gray-700">
               <strong>Start Date:</strong> {startedAt ? new Date(startedAt).toDateString() : "No start date set."}
             </div>
             <div className="mt-2 text-gray-700">
