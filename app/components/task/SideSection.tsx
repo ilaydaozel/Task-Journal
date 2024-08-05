@@ -1,34 +1,76 @@
 "use client";
 
+import { useState } from "react";
+import axios from "axios";
+import { handleApiResponse } from "@/app/utils/Helper";
+import { useRouter } from "next/navigation";
+
 const SideSection = ({ task }: { task: ITask }) => {
+  const router = useRouter();
+  const [status, setStatus] = useState(task.status);
+  const [startedAt, setStartedAt] = useState(task.startedAt);
+  const [completedAt, setCompletedAt] = useState(task.completedAt);
+
+  const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newStatus = e.target.value;
+    setStatus(newStatus);
+
+    const updates: any = { id: task.id, fieldName: "status", fieldValue: newStatus };
+    if (newStatus === "in progress" && !startedAt) {
+      const currentDate = new Date();
+      updates.startedAt = currentDate;
+      setStartedAt(currentDate);
+    } else if (newStatus === "done" && !completedAt) {
+      const currentDate = new Date();
+      updates.completedAt = currentDate;
+      setCompletedAt(currentDate);
+    }
+
+    try {
+      await handleApiResponse(
+        axios.put(`/api/task/updateTask`, updates),
+        router,
+        "Status update successful"
+      );
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
+  };
+
   return (
     <div className="md:w-2/5 w-full mx-auto p-6 bg-white rounded-lg shadow-lg">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div className="mb-4">
+          <div className="mt-2 text-gray-700">
+            <select
+                value={status}
+                onChange={handleStatusChange}
+                className={`font-semibold p-2 rounded text-white ${status === "done" ? "bg-green-500" : status === "inProgress" ? "bg-yellow-500" : "bg-red-500"}`}
+                >
+                <option value="to-do" className="bg-red-500">To-Do</option>
+                <option value="inProgress" className="bg-yellow-500">In Progress</option>
+                <option value="done" className="bg-green-500">Done</option>
+            </select>
             <div className="mt-2 text-gray-700">
               <strong>Acceptance Criteria:</strong> {task?.acceptanceCriteria || "No acceptance criteria provided."}
             </div>
             <div className="mt-2 text-gray-700">
-              <strong>Start Date:</strong> {task?.startedAt ? new Date(task.startedAt).toDateString() : "No start date set."}
+              <strong>Start Date:</strong> {startedAt ? new Date(startedAt).toDateString() : "No start date set."}
             </div>
             <div className="mt-2 text-gray-700">
-              <strong>Completed At:</strong> {task?.completedAt ? new Date(task.completedAt).toDateString() : "Not completed yet."}
+              <strong>Completed At:</strong> {completedAt ? new Date(completedAt).toDateString() : "Not completed yet."}
             </div>
             <div className="mt-2 text-gray-700">
               <strong>Deadline:</strong> {task?.deadlineAt ? new Date(task.deadlineAt).toDateString() : "No deadline set."}
             </div>
-            <div className="mt-2 text-gray-700">
-              <strong>Status:</strong> <span className={`font-semibold ${task?.status === "done" ? "text-green-500" : task?.status === "in progress" ? "text-yellow-500" : "text-red-500"}`}>{task?.status}</span>
+
             </div>
-            
           </div>
         </div>
-       
       </div>
     </div>
   );
 };
-
 
 export default SideSection;
