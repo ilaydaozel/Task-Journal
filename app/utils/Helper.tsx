@@ -58,7 +58,11 @@ export const getWeekNumber = (d: Date): [number, number] => {
   return [date.getUTCFullYear(), weekNo];
 };
 
-  // Function to get the month name based on the month index (0-11)
+export const getMonthNumber = (d: Date): number => {
+  return d.getMonth() + 1; // Months are zero-based in JavaScript, so add 1
+};
+
+// Function to get the month name based on the month index (0-11)
 export const getMonthName = (month: number) => {
     const monthNames = [
       'January', 'February', 'March', 'April', 'May', 'June',
