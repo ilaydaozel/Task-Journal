@@ -1,4 +1,4 @@
-import getTaskById from '@/app/actions/getTaskById';
+import getTaskById from '@/app/actions/task/getTaskById';
 import EmptyState from '@/app/components/EmptyState';
 import Task from '@/app/components/task/Task';
 
