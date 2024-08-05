@@ -20,8 +20,12 @@ export default async function getTaskById(params: IParams): Promise<ITask | null
                 workedOnDays: true, // Include days associated with the task
             },
         });
+        
+        if (!task) {
+            return null;
+        }
 
-        return task as unknown as ITask;
+        return task as ITask;
     } catch (error: any) {
         throw new Error(error.message || error);
     }

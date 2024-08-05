@@ -6,10 +6,9 @@ interface IParams {
 
 export default async function getWeekByWeekId(
     params: IParams
-): Promise<IWeek> {
+): Promise<IWeek | null> {
     try {
         const { weekId } = params;
-        console.log("provided week id: " + weekId);
 
         // Check if weekId is defined and is a valid ObjectID (24 characters long in hex)
         if (!weekId || weekId.length !== 24) {
@@ -24,15 +23,20 @@ export default async function getWeekByWeekId(
             include: {
                 days: {
                     include: {
-                        tasks: true, // Include tasks associated with each day
-                    },
+                        tasks: true
+                    }
                 },
-            },
+                month: {
+                    include: {
+                        year: true
+                    }
+                }
+            }
         });
 
         // Check if the week exists
         if (!weekWithDaysAndTasks) {
-            throw new Error("Week not found.");
+            return null;
         }
 
         // Return the week with its associated days and tasks

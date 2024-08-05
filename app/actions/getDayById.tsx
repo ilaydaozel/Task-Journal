@@ -22,7 +22,11 @@ export default async function getDayByDayId(params: IDayParams): Promise<IDay | 
             },
         });
 
-        return dayWithTasks as unknown as IDay;
+        if (!dayWithTasks) {
+            return null; // Return null if no year is found
+        }
+
+        return dayWithTasks as IDay;
     } catch (error: any) {
         throw new Error(error.message || error);
     }

@@ -8,7 +8,7 @@ export default async function getAllDays(): Promise<IDay[]> {
                 week: true,
             },
         });
-        return days as unknown as IDay[];
+        return days as IDay[];
     } catch (error: any) {
         throw new Error(error.message || error);
     }

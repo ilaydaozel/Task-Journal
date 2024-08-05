@@ -23,7 +23,11 @@ export default async function getDayByDate(params: IDateParams): Promise<IDay | 
             },
         });
 
-        return day as unknown as IDay;
+        if (!day) {
+            return null;
+        }
+
+        return day as IDay;
     } catch (error: any) {
         throw new Error(error.message || error);
     }

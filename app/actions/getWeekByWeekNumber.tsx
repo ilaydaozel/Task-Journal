@@ -12,7 +12,19 @@ export default async function getTaskById(
         const week = await prisma.week.findFirst({
             where: {
                 weekNumber: weekNumber,
-            },
+            }, 
+            include: {
+                days: {
+                    include: {
+                        tasks: true
+                    }
+                },
+                month: {
+                    include: {
+                        year: true
+                    }
+                }
+            }
         });
         if (!week) {
             return null;

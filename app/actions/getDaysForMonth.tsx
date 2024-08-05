@@ -12,8 +12,11 @@ export default async function getDaysForMonth({ year, month }: { year: number; m
             },
         });
 
-    return days as unknown as IDay[]; // Ensure the return type matches IDay
-        
+        if (!days) {
+            return null;
+        }
+
+        return days as IDay[]; // Ensure the return type matches IDay      
     } catch (error: any) {
         throw new Error(error.message || error);
     }
