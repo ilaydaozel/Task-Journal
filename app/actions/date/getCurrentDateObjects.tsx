@@ -4,12 +4,6 @@ interface IDateParams {
     date: Date; // Date object for the specific day
 }
 
-interface IDayDetails {
-    day: IDay | null;
-    week: IWeek | null;
-    month: IMonth | null;
-    year: IYear | null;
-}
 
 export default async function getCurrentDateObjects(params: IDateParams): Promise<IDayDetails> {
     try {

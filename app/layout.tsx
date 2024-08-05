@@ -21,7 +21,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const today = new Date()
-  const currentDate = await getCurrentDateObjects({date: new Date(today.getFullYear(), today.getMonth(), today.getDate()+1)});
+  const currentDate = await getCurrentDateObjects({date: new Date(today.getFullYear(), today.getMonth(), today.getDate())});
   const years = await getAllYears();
   if (currentDate && currentDate.week && currentDate.month && currentDate.year && currentDate.day){
     return (

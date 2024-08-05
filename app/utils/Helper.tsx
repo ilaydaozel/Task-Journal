@@ -75,6 +75,16 @@ export const getMonthName = (month: number) => {
     return monthNames[month] || 'Invalid Month'; // Return the month name or default
   };
 
+  // Function to get the month name based on the month index (0-11)
+export const getMonthNameAbbreviated = (month: number) => {
+  const monthNames = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+  return monthNames[month] || 'Invalid Month'; // Return the month name or default
+};
+
+
   // Function to get the day of the week based on the day index (0-6)
 export  const getDayOfTheWeek = (dayNumber: number) => {
     const dayNames = [
@@ -82,3 +92,46 @@ export  const getDayOfTheWeek = (dayNumber: number) => {
     ];
     return dayNames[dayNumber] || 'Invalid Day'; // Return the day name or default
   };
+
+
+export const printNumericDateDMY = (date: Date | undefined) => {
+  if(date instanceof Date) {
+    const day = date.getDate()
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return (day<10?"0"+day:day)+"."+(month<10?"0"+month:month)+"."+year;
+  }else{
+    return "none"
+  }
+};
+
+export const printNumericDateDM = (date: Date | undefined) => {
+  if(date instanceof Date) {
+    const day = date.getDate()
+    const month = date.getMonth() + 1;
+    return (day<10?"0"+day:day)+"."+(month<10?"0"+month:month);
+  }else{
+    return "none"
+  }
+};
+
+export const printStringDateDM = (date: Date | undefined) => {
+  if(date instanceof Date) {
+    const day = date.getDate()
+    const month = date.getMonth() + 1;
+    return (day<10?"0"+day:day)+" "+getMonthNameAbbreviated(month);
+  }else{
+    return "none"
+  }
+};
+
+export const printStringDateDMYD = (date: Date | undefined) => {
+  if(date instanceof Date) {
+    const day = date.getDate()
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return (day<10?"0"+day:day)+" "+getMonthNameAbbreviated(month)+" "+year+", "+ getDayOfTheWeek(date.getDay());
+  }else{
+    return "none"
+  }
+};
