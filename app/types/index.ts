@@ -17,7 +17,6 @@ interface ITask {
 interface IDay {
   id?: string;                    // Unique identifier for the day
   date: Date;                     // Specific date of the day
-  dayNumber: number;              // Day number in the week
   tasks: ITask[];                 // Tasks assigned to the day
   taskIds: string[];              // Array of task IDs assigned to the day
   week: IWeek;                    // Week the day belongs to
@@ -28,7 +27,6 @@ interface IDay {
 
 interface IWeek {
   id?: string;                    // Unique identifier for the week
-  weekNumber: number;             // Week number (1-52)
   days: IDay[];                   // Days in the week
   dayIds: string[];               // Array of day IDs in the week
   month: IMonth;                  // Month the week belongs to
