@@ -6,17 +6,20 @@ import WeekView from '@/app/components/views/week/WeekView';
 const WeekPage = async () => {
   try {
     const week = await getCurrentWeek()
-    console.log("current week:", week.week);
+    console.log("current week:", week);
   
-    if (week.week) {
+    if (week) {
       return (
         <div className='min-h-screen max-w-screen mt-16 flex flex-col items-center'>
-          <WeekView week={week.week}/>
+          <WeekView week={week}/>
         </div>
       );
     } else {
       return (
-        <EmptyState item='task' />
+        <div>
+          <h1> week: </h1>
+          <div>{week}</div>
+        </div>
       );
     }
   } catch (error: any) {

@@ -1,11 +1,7 @@
 import prisma from "@/app/lib/prismadb";
 
-interface IWeekDetails {
-    day: IDay | null;
-    week: IWeek | null;
-}
 
-export default async function getCurrentWeek(): Promise<IWeekDetails> {
+export default async function getCurrentWeek(): Promise<IWeek | null> {
     try {
         const today = new Date()
         const date = new Date(today.getFullYear(), today.getMonth(), today.getDate())
@@ -42,17 +38,11 @@ export default async function getCurrentWeek(): Promise<IWeekDetails> {
                 },
             });
 
-            return {
-                day: day as IDay,
-                week: week as IWeek,
-            };
+            return week as IWeek
         }
 
         // If no day is found, return nulls for all
-        return {
-            day: null,
-            week: null,
-        };
+        return null
     } catch (error: any) {
         throw new Error(error.message || error);
     }
