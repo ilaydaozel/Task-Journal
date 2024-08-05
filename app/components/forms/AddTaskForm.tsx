@@ -1,30 +1,28 @@
 "use client";
 
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import Modal from 'react-modal';
 import Button from '../formComponents/Button';
 import { handleApiResponse } from '@/app/utils/Helper';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import InputField from '../formComponents/InputField';
-
+import CustomCalendar from '../formComponents/CustomCalendar'; // Adjust the import path if necessary
 
 interface AddTaskFormProps {
   isOpen: boolean;
   onClose: () => void;
+  years: IYear[]; // Add years prop to pass to CustomCalendar
 }
 
-const AddTaskForm = ({ isOpen, onClose }: AddTaskFormProps) => {
+const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     acceptanceCriteria: '',
-    startedAt: '',
-    completedAt: '',
     deadlineAt: '',
-    status: '',
-    comments: '',
   });
+  const [selectedWorkedOnDayIds, setSelectedWorkedOnDayIds] = useState<string[]>([]); // State for worked on days
   const router = useRouter();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -35,18 +33,20 @@ const AddTaskForm = ({ isOpen, onClose }: AddTaskFormProps) => {
     }));
   };
 
+  const handleWorkedOnDayIdsSelect = (dayIds: string[]) => {
+    setSelectedWorkedOnDayIds(dayIds);
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = axios.post('/api/task/createTask', {
         ...formData,
-        startedAt: new Date(formData.startedAt),
-        completedAt: new Date(formData.completedAt),
-        deadlineAt: new Date(formData.deadlineAt),
-        comments: formData.comments.split(',').map((comment: string) => comment.trim()),
+        deadlineAt: formData.deadlineAt ? new Date(formData.deadlineAt) : null,
+        workedOnDayIds: selectedWorkedOnDayIds,
       });
       await handleApiResponse(response, router, "Add successful");
+      setSelectedWorkedOnDayIds([]);
       onClose(); // Close the modal after successful submission
     } catch (error) {
       console.error('Error adding task:', error);
@@ -82,45 +82,23 @@ const AddTaskForm = ({ isOpen, onClose }: AddTaskFormProps) => {
                 onChange={handleChange}
               />
               <InputField 
-                label="Start Date"
-                name="startedAt"
-                value={formData.startedAt}
-                onChange={handleChange}
-                required
-                type="date"
-              />
-              <InputField 
-                label="Completed At"
-                name="completedAt"
-                value={formData.completedAt}
-                onChange={handleChange}
-                required
-                type="date"
-              />
-              <InputField 
                 label="Deadline"
                 name="deadlineAt"
                 value={formData.deadlineAt}
                 onChange={handleChange}
-                required
                 type="date"
               />
             </div>
             <div className='flex flex-col gap-4'>
-              <InputField 
-                label="Status"
-                name="status"
-                value={formData.status}
-                onChange={handleChange}
+              <label className='text-sm font-semibold'>Select Days</label>
+              <CustomCalendar 
+                years={years} 
+                allowMultipleSelection={true} 
+                onDaySelect={handleWorkedOnDayIdsSelect} 
               />
-              <InputField 
-                label="Comments (comma-separated)"
-                name="comments"
-                value={formData.comments}
-                onChange={handleChange}
-              />
-            </div>
           </div>
+          </div>
+ 
           <div className='flex gap-4 items-center justify-end'>
             <Button type="submit" label='Add Task'/>
             <Button type="button" onClick={onClose} label='Cancel'/>
