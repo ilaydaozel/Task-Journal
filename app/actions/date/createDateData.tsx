@@ -22,7 +22,14 @@ async function createYearAndMonths(year: number) {
 
         for (let month = 1; month <= 12; month++) {    
             const monthRecord = await createMonth(month, yearRecord);
-            monthIds.push(monthRecord.id); // Add the created month ID to the array
+            yearRecord = await prisma.year.update({
+                where: { id: yearRecord.id },
+                data: { 
+                    monthIds: {
+                        push: monthRecord.id 
+                    } 
+                },
+            });
         }
 
         // Update the year record with the month IDs

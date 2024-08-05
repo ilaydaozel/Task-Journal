@@ -8,9 +8,9 @@ export async function POST(request: Request) {
         description,
         acceptanceCriteria,
         deadlineAt,
-        workedOnDayIds
+        workedOnDays
     } = body;
-    console.log("workedOnDayIds route: ", workedOnDayIds)
+    
     try {
         // Create the task
         const task = await prisma.task.create({
@@ -23,9 +23,24 @@ export async function POST(request: Request) {
                 deadlineAt: new Date(deadlineAt) || null,
                 status: "to-do",
                 comments: [],
-                workedOnDayIds: workedOnDayIds || [],
+                workedOnDayIds: workedOnDays
+                    .map((day: IDay) => day.id).filter((id: string | undefined): id is string => id !== undefined)|| [],
             },
         });
+
+         // Update workedOnDays with the new task ID
+         await Promise.all(
+            workedOnDays.map(async (day: IDay) => {
+                await prisma.day.update({
+                    where: { id: day.id }, // Identify the day to update
+                    data: {
+                        taskIds: {
+                            push: task.id, // Add the new task ID to the taskIds array
+                        },
+                    },
+                });
+            })
+        );
 
         return NextResponse.json(task);
     } catch (error) {

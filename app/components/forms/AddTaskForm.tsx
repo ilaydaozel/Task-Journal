@@ -22,7 +22,7 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
     acceptanceCriteria: '',
     deadlineAt: '',
   });
-  const [selectedWorkedOnDayIds, setSelectedWorkedOnDayIds] = useState<string[]>([]); // State for worked on days
+  const [selectedWorkedOnDays, setSelectedWorkedOnDays] = useState<IDay[]>([]); // State for worked on days
   const router = useRouter();
   // Check if the element exists before setting the app element
   useEffect(() => {
@@ -39,8 +39,8 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
     }));
   };
 
-  const handleWorkedOnDayIdsSelect = (dayIds: string[]) => {
-    setSelectedWorkedOnDayIds(dayIds);
+  const handleWorkedOnDaysSelect = (days: IDay[]) => {
+    setSelectedWorkedOnDays(days);
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -49,10 +49,10 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
       const response = axios.post('/api/task/createTask', {
         ...formData,
         deadlineAt: formData.deadlineAt ? new Date(formData.deadlineAt) : null,
-        workedOnDayIds: selectedWorkedOnDayIds,
+        workedOnDays: selectedWorkedOnDays,
       });
       await handleApiResponse(response, router, "Add successful");
-      setSelectedWorkedOnDayIds([]);
+      setSelectedWorkedOnDays([]);
       onClose(); // Close the modal after successful submission
     } catch (error) {
       console.error('Error adding task:', error);
@@ -106,7 +106,7 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
                 <CustomCalendar 
                   years={years} 
                   allowMultipleSelection={true} 
-                  onDaySelect={handleWorkedOnDayIdsSelect} 
+                  onDaySelect={handleWorkedOnDaysSelect} 
                 />
               </div>
             </div>

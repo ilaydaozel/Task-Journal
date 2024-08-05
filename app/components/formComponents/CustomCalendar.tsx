@@ -5,34 +5,30 @@ import React, { useState } from 'react';
 interface CustomCalendarProps {
   years: IYear[];
   allowMultipleSelection?: boolean; // New prop for enabling multiple day selection
-  onDaySelect: (dayIds: string[]) => void; // Prop to handle day selection
+  onDaySelect: (days: IDay[]) => void; // Prop to handle day selection
 }
 
-const CustomCalendar: React.FC<CustomCalendarProps> = ({ years, allowMultipleSelection = false, onDaySelect }) => {
+const CustomCalendar= ({ years, allowMultipleSelection = false, onDaySelect }: CustomCalendarProps) => {
   const [selectedYearIndex, setSelectedYearIndex] = useState(0);
   const [selectedMonthIndex, setSelectedMonthIndex] = useState(0);
-  const [selectedDayIds, setSelectedDayIds] = useState<string[]>([]);
+  const [selectedDays, setSelectedDays] = useState<IDay[]>([]);
 
   const handleDaySelect = (day: IDay) => {
-    if(day.id){
-        if (allowMultipleSelection) {
-            setSelectedDayIds((prevDays) => {
-                const dayExists = prevDays.some((d) => d === day.id);
-                const updatedDays = dayExists
-                  ? prevDays.filter((d) => d !== day.id)
-                  : [...prevDays, day.id];
-                onDaySelect(updatedDays.filter((id): id is string => id !== undefined));
-                return updatedDays.filter((id): id is string => id !== undefined);
-              });
-            } else {
-              setSelectedDayIds([day.id]);
-              onDaySelect([day.id]);
-            }
-    }else{
-        console.error('Cannot select a non-existing day id');
-    }
-    
+    if (allowMultipleSelection) {
+        setSelectedDays((prevDays) => {
+            const dayExists = prevDays.some((d) => d.date.toString() !== day.date.toString());
+            const updatedDays = dayExists
+                ? prevDays.filter((d) => d.date.toString() !== day.date.toString())
+                : [...prevDays, day];
+            onDaySelect(updatedDays);
+            return updatedDays;
+            });
+        } else {
+            setSelectedDays([day]);
+            onDaySelect([day]);
+        }
   };
+    
 
   const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedYearIndex(Number(event.target.value));
@@ -66,7 +62,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ years, allowMultipleSel
     // Fill in the days of the month
     selectedMonth.weeks.forEach((week) => {
       week.days.forEach((day) => {
-        const isSelected = selectedDayIds.some((d) => d === day.id);
+        const isSelected = selectedDays.some((d) => d.date.toString() !== day.date.toString());
         calendar.push(
           <div
             key={day.date.toString()}
