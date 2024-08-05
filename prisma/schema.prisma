@@ -44,11 +44,34 @@ model Day {
 model Week {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   weekNumber        Int
-  year              Int
   days              Day[]
-  dayIds            String[]  @db.ObjectId
+  dayIds            String[] @db.ObjectId
+  month             Month    @relation(fields: [monthId], references: [id], onDelete: Cascade)
+  monthId           String   @db.ObjectId
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@unique([monthId, weekNumber]) // Unique constraint
+}
+
+model Month {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  monthNumber       Int
+  weeks             Week[]
+  weekIds           String[] @db.ObjectId
+  year              Year     @relation(fields: [yearId], references: [id], onDelete: Cascade)
+  yearId            String   @db.ObjectId
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  @@unique([year, weekNumber]) // Composite unique constraint
+  @@unique([yearId, monthNumber]) // Unique constraint
+}
+
+model Year {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  yearNumber        Int      @unique
+  months            Month[]
+  monthIds          String[] @db.ObjectId
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
