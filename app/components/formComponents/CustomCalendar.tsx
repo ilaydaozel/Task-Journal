@@ -1,5 +1,5 @@
 "use client";
-import { getMonthName } from '@/app/utils/Helper';
+import { getMonthName } from '@/app/utils/helper';
 import React, { useState } from 'react';
 
 interface CustomCalendarProps {
