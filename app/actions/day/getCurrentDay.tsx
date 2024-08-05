@@ -1,10 +1,12 @@
 import prisma from "@/app/lib/prismadb";
 
+interface IParams {
+    date?: Date;
+}
 
-export default async function getCurrentDay(): Promise<IDay | null> {
+export default async function getCurrentDay({date}:IParams): Promise<IDay | null> {
     try {
-        const today = new Date()
-        const date = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+        
         // Ensure the date is a valid Date object
         if (!date || isNaN(date.getTime())) {
             throw new Error("Invalid date provided.");

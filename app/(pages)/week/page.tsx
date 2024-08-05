@@ -7,7 +7,9 @@ import WeekView from '@/app/components/views/week/WeekView';
 
 const WeekPage = async () => {
   try {
-    const day = await getCurrentDay()
+    const today = new Date()
+    const date = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    const day = await getCurrentDay({date: date})
     const week = await getWeekById({ weekId: day?.weekId });
     console.log("current week:", week);
   
