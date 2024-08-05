@@ -9,24 +9,24 @@ interface CustomCalendarProps {
 }
 
 const CustomCalendar= ({ years, allowMultipleSelection = false, onDaySelect }: CustomCalendarProps) => {
-  const [selectedYearIndex, setSelectedYearIndex] = useState(0);
-  const [selectedMonthIndex, setSelectedMonthIndex] = useState(0);
+  const [selectedYearIndex, setSelectedYearIndex] = useState(new Date().getFullYear()-2024);
+  const [selectedMonthIndex, setSelectedMonthIndex] = useState(new Date().getMonth());
   const [selectedDays, setSelectedDays] = useState<IDay[]>([]);
 
   const handleDaySelect = (day: IDay) => {
     if (allowMultipleSelection) {
         setSelectedDays((prevDays) => {
-            const dayExists = prevDays.some((d) => d.date.toString() !== day.date.toString());
+            const dayExists = prevDays.some((d) => d.date.toString() === day.date.toString());
             const updatedDays = dayExists
-                ? prevDays.filter((d) => d.date.toString() !== day.date.toString())
-                : [...prevDays, day];
+              ? prevDays.filter((d) => d.date.toString() !== day.date.toString())
+              : [...prevDays, day];
             onDaySelect(updatedDays);
             return updatedDays;
-            });
-        } else {
+          });
+    } else {
             setSelectedDays([day]);
             onDaySelect([day]);
-        }
+    }
   };
     
 
@@ -62,12 +62,12 @@ const CustomCalendar= ({ years, allowMultipleSelection = false, onDaySelect }: C
     // Fill in the days of the month
     selectedMonth.weeks.forEach((week) => {
       week.days.forEach((day) => {
-        const isSelected = selectedDays.some((d) => d.date.toString() !== day.date.toString());
+        const isSelected = selectedDays.some((d) => d.date.toString() == day.date.toString());
         calendar.push(
           <div
             key={day.date.toString()}
             className={`w-6 h-6 border flex items-center justify-center cursor-pointer 
-                text-sm rounded-sm ${isSelected ? 'bg-white' : 'bg-primary-600'}`}
+                text-sm rounded-sm ${isSelected ? 'bg-white' : 'bg-primary-500'}`}
             onClick={() => handleDaySelect(day)}
           >
             {day.date.getDate()}
