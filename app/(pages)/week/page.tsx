@@ -1,11 +1,14 @@
+import getCurrentDay from '@/app/actions/day/getCurrentDay';
 import getCurrentWeek from '@/app/actions/week/getCurrentWeek';
+import getWeekById from '@/app/actions/week/getWeekById';
 import EmptyState from '@/app/components/EmptyState';
 import WeekView from '@/app/components/views/week/WeekView';
 
 
 const WeekPage = async () => {
   try {
-    const week = await getCurrentWeek()
+    const day = await getCurrentDay()
+    const week = await getWeekById({ weekId: day?.weekId });
     console.log("current week:", week);
   
     if (week) {
