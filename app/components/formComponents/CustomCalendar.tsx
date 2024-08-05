@@ -67,7 +67,7 @@ const CustomCalendar= ({ years, allowMultipleSelection = false, onDaySelect }: C
           <div
             key={day.date.toString()}
             className={`w-6 h-6 border flex items-center justify-center cursor-pointer 
-                text-sm rounded-sm ${isSelected ? 'bg-white' : 'bg-primary-500'}`}
+                text-sm rounded-sm ${isSelected ? 'bg-white' : 'bg-primary-600'}`}
             onClick={() => handleDaySelect(day)}
           >
             {day.date.getDate()}
@@ -86,7 +86,7 @@ const CustomCalendar= ({ years, allowMultipleSelection = false, onDaySelect }: C
         <select
           onChange={handleYearChange}
           value={selectedYearIndex}
-          className="bg-transparent text-text1-600"
+          className="bg-transparent text-md text-text1-400"
         >
           {years.map((year, index) => (
             <option key={year.yearNumber} value={index}>
@@ -109,7 +109,7 @@ const CustomCalendar= ({ years, allowMultipleSelection = false, onDaySelect }: C
       </div>
 
       {/* Calendar Grid */}
-      <div className="grid grid-cols-7 text-xs text-text1-600">
+      <div className="grid grid-cols-7 text-xs">
         <span>M</span>
         <span>T</span>
         <span>W</span>
