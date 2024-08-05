@@ -9,7 +9,7 @@ const EmptyState = ({ item }: EmptyStateProps) => {
   return (
     <div
       className='
-        h-[80vh]
+        min-h-screen
         flex 
         flex-col 
         gap-2 

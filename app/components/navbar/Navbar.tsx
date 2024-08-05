@@ -1,18 +1,30 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavLink from "./NavLink";
 import { Bars3Icon, XMarkIcon, PlusCircleIcon} from "@heroicons/react/24/solid";
 import MenuOverlay from "./MenuOverlay";
 import AddTaskForm from "../forms/AddTaskForm";
+import { getLocalStorageItem, isSameDay, setLocalStorageItem } from "@/app/utils/localStorageUtils";
 
 
-const Navbar = ({currentDate, years}: {currentDate: IDayDetails, years: IYear[]}) => {
+const Navbar = async ({currentDate, years}: {currentDate: IDayDetails, years: IYear[]}) => {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  useEffect(() => {
+    const storedDateInfo = getLocalStorageItem('currentDateInfo');
+    console.log("storedDateInfo", storedDateInfo)
+    const today = new Date();
+    if (!storedDateInfo || !isSameDay(new Date(storedDateInfo.date), today)) {
+    } else {
+      setLocalStorageItem('currentDateInfo', { date: today, currentDay: currentDate.day, currentDayId: currentDate.day?.id });
+    }
+    console.log("storedDateInfo set after:", storedDateInfo)
+  }, []);
+ 
   const navLinks: INavLink[] = [
     {
       title: "Home",

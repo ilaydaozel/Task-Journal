@@ -20,15 +20,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const today = new Date()
-  const currentDate = await getCurrentDateObjects({date: new Date(today.getFullYear(), today.getMonth(), today.getDate())});
+  const today = new Date();
+  const currentDateObjects = await getCurrentDateObjects({date: new Date(today.getFullYear(), today.getMonth(), today.getDate())});
   const years = await getAllYears();
   return (
   <html lang="en">
     <body className={inter.className}>      
     <Suspense fallback={<Loading />}>
       <ToasterProvider />
-      <Navbar currentDate={currentDate} years={years}></Navbar>
+      <Navbar currentDate={currentDateObjects} years={years}></Navbar>
       <div className="bg-bg-50 text-text1-800">
         {children}
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { handleApiResponse } from "@/app/utils/Helper";
+import { handleApiResponse } from "@/app/utils/helper";
 import EditableField from "../formComponents/EditableField";
 import axios from "axios";
 import { useRouter } from "next/navigation";
