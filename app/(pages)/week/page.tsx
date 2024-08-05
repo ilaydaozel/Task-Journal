@@ -4,6 +4,7 @@ import getCurrentWeek from '@/app/actions/week/getCurrentWeek';
 import getWeekById from '@/app/actions/week/getWeekById';
 import EmptyState from '@/app/components/EmptyState';
 import WeekView from '@/app/components/views/week/WeekView';
+export const dynamic = 'force-dynamic';
 
 
 const WeekPage = async () => {

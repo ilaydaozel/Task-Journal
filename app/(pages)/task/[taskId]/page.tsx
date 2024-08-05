@@ -1,7 +1,7 @@
 import getTaskById from '@/app/actions/task/getTaskById';
 import EmptyState from '@/app/components/EmptyState';
 import Task from '@/app/components/task/Task';
-
+export const dynamic = 'force-dynamic';
 
 interface IParams {
   taskId?: string;
