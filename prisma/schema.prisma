@@ -18,9 +18,9 @@ model Task {
   name              String
   description       String?
   acceptanceCriteria String?
-  startedAt         DateTime
-  completedAt       DateTime
-  deadlineAt        DateTime
+  startedAt         DateTime?
+  completedAt       DateTime?
+  deadlineAt        DateTime?
   status            String   @default("to-do")
   comments          String[]
   workedOnDays      Day[]    @relation(fields: [workedOnDayIds], references: [id])

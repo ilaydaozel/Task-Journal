@@ -3,9 +3,9 @@ interface ITask {
   name: string;                   // Name of the task
   description?: string | null;    // Detailed description of the task
   acceptanceCriteria?: string | null; // Criteria for accepting the task as completed
-  startedAt: Date;                // Start date of the task
-  completedAt: Date;              // Completion date of the task
-  deadlineAt: Date;               // Deadline for the task
+  startedAt: Date | null;                // Start date of the task
+  completedAt: Date | null;              // Completion date of the task
+  deadlineAt: Date | null;               // Deadline for the task
   status: string;                 // Current status of the task
   comments: string[];             // List of comments associated with the task                
   workedOnDays: IDay[];           // Days the task was worked on
