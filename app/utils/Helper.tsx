@@ -135,3 +135,16 @@ export const printStringDateDMYD = (date: Date | undefined) => {
     return "none"
   }
 };
+
+export const getStatusClassName = (status: string | null) => {
+  switch (status) {
+    case 'to-do':
+      return 'bg-todo';
+    case 'inProgress':
+      return 'bg-inProgress';
+    case 'done':
+      return 'bg-done';
+    default:
+      return 'bg-white';
+  }
+};
