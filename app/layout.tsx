@@ -5,8 +5,8 @@ import ToasterProvider from "./providers/ToasterProvider";
 import { Suspense } from "react";
 import Loading from "./loading";
 import Navbar from "./components/navbar/Navbar";
-import getAllYears from "./actions/getAllYears";
-import getCurrentDateObjects from "./actions/getCurrentDateObjects";
+import getAllYears from "./actions/year/getAllYears";
+import getCurrentDateObjects from "./actions/date/getCurrentDateObjects";
 
 const inter = Inter({ subsets: ["latin"] });
 

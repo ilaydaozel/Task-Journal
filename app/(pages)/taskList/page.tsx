@@ -1,4 +1,4 @@
-import getAllTasks from '@/app/actions/getAllTasks';
+import getAllTasks from '@/app/actions/task/getAllTasks';
 import TaskListPage from './TaskListPage';
 export const dynamic = 'force-dynamic';
 

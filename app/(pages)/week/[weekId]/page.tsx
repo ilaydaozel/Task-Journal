@@ -1,4 +1,4 @@
-import getWeekByWeekId from '@/app/actions/getWeekByWeekId';
+import getWeekByWeekId from '@/app/actions/week/getWeekByWeekId';
 import EmptyState from '@/app/components/EmptyState';
 import WeekView from '@/app/components/views/week/WeekView';
 
