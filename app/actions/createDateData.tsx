@@ -152,21 +152,24 @@ async function createDay(dayDate: Date, weekId: string) {
     return day;
 }
 
-export default async function createYearsMonthsWeeksAndDays() {
-    console.log("Started creating!");
-
-    const currentYear = new Date().getFullYear();
-    const endYear = currentYear + 1;
-
+async function deleteExistingData(){
     // Drop existing days and weeks
     await prisma.day.deleteMany({});
     await prisma.week.deleteMany({});
     await prisma.month.deleteMany({});
     await prisma.year.deleteMany({});
     console.log("Deleted all days, weeks, months, and years!");
+}
+
+export default async function createYearsMonthsWeeksAndDays() {
+    console.log("Started creating!");
+
+    const currentYear = new Date().getFullYear();
+    const endYear = currentYear + 2;
+    //deleteExistingData();
 
     for (let year = currentYear; year < endYear; year++) {
-        const yearRecord = await createYearAndMonths(year);
+        await createYearAndMonths(year);
     }
     
     console.log("Years, months, weeks, and days created for the next years!");
