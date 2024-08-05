@@ -23,20 +23,16 @@ export default async function RootLayout({
   const today = new Date()
   const currentDate = await getCurrentDateObjects({date: new Date(today.getFullYear(), today.getMonth(), today.getDate())});
   const years = await getAllYears();
-  if (currentDate && currentDate.week && currentDate.month && currentDate.year && currentDate.day){
-    return (
-      <html lang="en">
-        <body className={inter.className}>      
-        <Suspense fallback={<Loading />}>
-          <ToasterProvider />
-          <Navbar currentDate={currentDate} years={years}></Navbar>
-          <div className="bg-bg-50 text-text1-800">
-            {children}
-          </div>
-        </Suspense></body>
-      </html>
-        );
-  }
-  
-
+  return (
+  <html lang="en">
+    <body className={inter.className}>      
+    <Suspense fallback={<Loading />}>
+      <ToasterProvider />
+      <Navbar currentDate={currentDate} years={years}></Navbar>
+      <div className="bg-bg-50 text-text1-800">
+        {children}
+      </div>
+    </Suspense></body>
+  </html>
+    );
 }
