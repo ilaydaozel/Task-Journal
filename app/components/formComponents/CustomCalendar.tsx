@@ -60,7 +60,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ years, allowMultipleSel
 
     // Fill the first week with empty slots
     for (let i = 0; i < firstDay; i++) {
-      calendar.push(<div key={`empty-${i}`} className="w-6 h-6 border"></div>);
+      calendar.push(<div key={`empty-${i}`} className="w-6 h-6 border rounded-sm"></div>);
     }
 
     // Fill in the days of the month
@@ -71,7 +71,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ years, allowMultipleSel
           <div
             key={day.date.toString()}
             className={`w-6 h-6 border flex items-center justify-center cursor-pointer 
-                text-sm ${isSelected ? 'bg-white' : 'bg-primary-200'}`}
+                text-sm rounded-sm ${isSelected ? 'bg-white' : 'bg-primary-600'}`}
             onClick={() => handleDaySelect(day)}
           >
             {day.date.getDate()}
@@ -84,7 +84,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ years, allowMultipleSel
   };
 
   return (
-    <div className="flex flex-col gap-1 justify-center items-center p-3 bg-gray-50 rounded-lg shadow-md">
+    <div className="flex flex-col min-w-10 gap-1 justify-center items-center p-3 bg-white rounded-lg shadow-md">
       {/* Year Selection */}
       <div className='w-fit'>
         <select

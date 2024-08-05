@@ -39,20 +39,20 @@ const Navbar = ({currentWeek, years}: {currentWeek: IWeek | null, years: IYear[]
           {!navbarOpen ? (
             <button
               onClick={() => setNavbarOpen(true)}
-              className="flex items-center px-2 py-1 border rounded text-text1-500 hover:text-primary-200 hover:border-primary-200"
+              className="flex items-center px-2 py-1 border rounded text-text1-500 hover:text-primary-600 hover:border-primary-600"
             >
              <Bars3Icon className="h-5 w-5" /> 
             </button>
           ) : (
             <button
               onClick={() => setNavbarOpen(false)}
-              className="flex items-center px-2 py-1 border rounded text-text1-500 hover:text-primary-200 hover:border-primary-200"
+              className="flex items-center px-2 py-1 border rounded text-text1-500 hover:text-primary-600 hover:border-primary-600"
             >
             <XMarkIcon className="h-5 w-5" />
             </button>
           )}
           <div className="w-fit">
-                <PlusCircleIcon className='text-primary-200 h-8 w-8 hover:scale-110' onClick={openModal} />   
+                <PlusCircleIcon className='text-primary-600 h-8 w-8 hover:scale-110' onClick={openModal} />   
                 <AddTaskForm isOpen={isModalOpen} onClose={closeModal} years={years} />
             </div>  
         </div>
@@ -64,7 +64,7 @@ const Navbar = ({currentWeek, years}: {currentWeek: IWeek | null, years: IYear[]
               </li>
             ))}
             <div className="w-fit">
-                <PlusCircleIcon className='text-primary-200 h-8 w-8 hover:scale-110' onClick={openModal} />   
+                <PlusCircleIcon className='text-primary-600 h-8 w-8 hover:scale-110' onClick={openModal} />   
                 <AddTaskForm isOpen={isModalOpen} onClose={closeModal} years={years} />
             </div>      
           </ul>

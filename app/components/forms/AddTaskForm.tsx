@@ -62,54 +62,60 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onClose} className="w-fit fixed overflow-y-auto overflow-x-auto top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border border-solid border-gray-200 rounded-lg shadow-md p-6">
-      <div className='flex flex-col items-center p-4'>
-        <h2 className='text-lg font-bold mb-4'>Add New Task</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-          <div className='flex gap-4'>
-            <div className='flex flex-col gap-4'>
-              <InputField 
-                label="Name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-              <InputField 
-                label="Description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-              />
-              <InputField 
-                label="Acceptance Criteria"
-                name="acceptanceCriteria"
-                value={formData.acceptanceCriteria}
-                onChange={handleChange}
-              />
-              <InputField 
-                label="Deadline"
-                name="deadlineAt"
-                value={formData.deadlineAt}
-                onChange={handleChange}
-                type="date"
-              />
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onClose}
+      className="fixed inset-0 flex items-center justify-center p-4 z-50"
+      overlayClassName="fixed inset-0 bg-white bg-opacity-50"
+    >
+      <div className="bg-white w-full max-w-2xl mx-auto p-6 border border-solid border-gray-200 rounded-lg shadow-md max-h-[80vh] overflow-y-auto">
+        <div className='flex flex-col items-center p-4'>
+          <h2 className='text-lg font-bold mb-4'>Add New Task</h2>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full">
+            <div className='flex flex-col md:flex-row gap-4 w-full'>
+              <div className='flex flex-col gap-4 w-full'>
+                <InputField 
+                  label="Name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+                <InputField 
+                  label="Description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                />
+                <InputField 
+                  label="Acceptance Criteria"
+                  name="acceptanceCriteria"
+                  value={formData.acceptanceCriteria}
+                  onChange={handleChange}
+                />
+                <InputField 
+                  label="Deadline"
+                  name="deadlineAt"
+                  value={formData.deadlineAt}
+                  onChange={handleChange}
+                  type="date"
+                />
+              </div>
+              <div className='flex flex-col gap-4 w-full'>
+                <label className='text-sm font-semibold'>Assign Day</label>
+                <CustomCalendar 
+                  years={years} 
+                  allowMultipleSelection={true} 
+                  onDaySelect={handleWorkedOnDayIdsSelect} 
+                />
+              </div>
             </div>
-            <div className='flex flex-col gap-4'>
-              <label className='text-sm font-semibold'>Select Days</label>
-              <CustomCalendar 
-                years={years} 
-                allowMultipleSelection={true} 
-                onDaySelect={handleWorkedOnDayIdsSelect} 
-              />
-          </div>
-          </div>
- 
-          <div className='flex gap-4 items-center justify-end'>
-            <Button type="submit" label='Add Task'/>
-            <Button type="button" onClick={onClose} label='Cancel'/>
-          </div>
-        </form>
+            <div className='flex gap-4 items-center justify-end'>
+              <Button type="submit" label='Add Task'/>
+              <Button type="button" onClick={onClose} label='Cancel'/>
+            </div>
+          </form>
+        </div>
       </div>
     </Modal>
   );

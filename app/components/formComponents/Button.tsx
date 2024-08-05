@@ -28,7 +28,7 @@ const Button = ({
         transition-transform
         text-sm
         p-2
-        bg-primary-700
+        bg-secondary-900
         text-white
         font-semibold
       `}
