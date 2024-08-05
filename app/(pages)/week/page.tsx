@@ -16,10 +16,7 @@ const WeekPage = async () => {
       );
     } else {
       return (
-        <div>
-          <h1> week: </h1>
-          <div>{week}</div>
-        </div>
+        <EmptyState item={'week'}></EmptyState>
       );
     }
   } catch (error: any) {

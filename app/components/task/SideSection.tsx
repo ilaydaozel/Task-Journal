@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
-import { handleApiResponse } from "@/app/utils/Helper";
+import { getStatusClassName, handleApiResponse } from "@/app/utils/Helper";
 import { useRouter } from "next/navigation";
 
 const SideSection = ({ task }: { task: ITask }) => {
@@ -46,11 +46,11 @@ const SideSection = ({ task }: { task: ITask }) => {
             <select
                 value={status}
                 onChange={handleStatusChange}
-                className={`font-semibold p-2 rounded text-white ${status === "done" ? "bg-green-500" : status === "inProgress" ? "bg-yellow-500" : "bg-red-500"}`}
+                className={`font-semibold p-2 rounded text-white ${getStatusClassName(task.status)}`}
                 >
-                <option value="to-do" className="bg-red-500">To-Do</option>
-                <option value="inProgress" className="bg-yellow-500">In Progress</option>
-                <option value="done" className="bg-green-500">Done</option>
+                <option value="to-do" className={`${getStatusClassName("to-do")}`}>To-Do</option>
+                <option value="inProgress" className={`${getStatusClassName("inProgress")}`}>In Progress</option>
+                <option value="done" className={`${getStatusClassName("done")}`}>Done</option>
             </select>
             <div className="mt-2 text-gray-700">
               <strong>Start Date:</strong> {startedAt ? new Date(startedAt).toDateString() : "No start date set."}
