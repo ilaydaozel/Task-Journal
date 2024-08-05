@@ -40,7 +40,7 @@ export const handleApiResponse = async (
   }
 };
 
-export const getWeekNumber = (d: Date): [number, number] => {
+export const getWeekNumber = (d: Date): [number, number, number] => {
   // Copy date so we don't modify the original
   let date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
   
@@ -54,9 +54,13 @@ export const getWeekNumber = (d: Date): [number, number] => {
   // Calculate full weeks to the nearest Thursday
   const weekNo = Math.ceil((((date.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
   
-  // Return an array of year and week number
-  return [date.getUTCFullYear(), weekNo];
+  // Get the current month
+  const month = date.getUTCMonth() + 1; // Months are 0-based, so add 1
+
+  // Return an array of year, week number, and month
+  return [date.getUTCFullYear(), weekNo, month];
 };
+
 
 export const getMonthNumber = (d: Date): number => {
   return d.getMonth() + 1; // Months are zero-based in JavaScript, so add 1

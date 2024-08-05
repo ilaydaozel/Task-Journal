@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import Loading from "./loading";
 import Navbar from "./components/navbar/Navbar";
 import { getWeekNumber } from "./utils/Helper";
-import getWeekByWeekNumber from "./actions/getWeekByWeekNumber";
+import createYearsMonthsWeeksAndDays from "./actions/createDateData";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,15 +21,18 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   var weekNumber = getWeekNumber(new Date());
+  createYearsMonthsWeeksAndDays();
+  /*
   console.log("weekNumber", weekNumber);
-  const currentWeek = await getWeekByWeekNumber({weekNumber: weekNumber[1]});
+  const currentWeek = await getWeekByWeekNumber({yearNumber: weekNumber[0], weekNumber: weekNumber[1]});
   console.log("currentWeek:",currentWeek)
+  */
   return (
     <html lang="en">
       <body className={inter.className}>      
       <Suspense fallback={<Loading />}>
         <ToasterProvider />
-        <Navbar currentWeek={currentWeek? currentWeek : null}></Navbar>
+        <Navbar currentWeek={null}></Navbar>
         <div className="bg-bg-50 text-text1-800">
           {children}
         </div>
