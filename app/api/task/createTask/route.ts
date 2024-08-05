@@ -7,13 +7,10 @@ export async function POST(request: Request) {
         name,
         description,
         acceptanceCriteria,
-        startedAt,
-        completedAt,
         deadlineAt,
-        status,
-        comments,
+        workedOnDayIds
     } = body;
-
+    console.log("workedOnDayIds route: ", workedOnDayIds)
     try {
         // Create the task
         const task = await prisma.task.create({
@@ -21,12 +18,12 @@ export async function POST(request: Request) {
                 name,
                 description: description || null,
                 acceptanceCriteria: acceptanceCriteria || null,
-                startedAt: new Date(startedAt),
-                completedAt: new Date(completedAt),
-                deadlineAt: new Date(deadlineAt),
-                status: status || "to-do",
-                comments: comments,
-                workedOnDayIds: [], // Assign the days for the task
+                startedAt: null,
+                completedAt: null,
+                deadlineAt: new Date(deadlineAt) || null,
+                status: "to-do",
+                comments: [],
+                workedOnDayIds: workedOnDayIds || [],
             },
         });
 
