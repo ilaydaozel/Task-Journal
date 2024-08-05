@@ -1,21 +1,21 @@
-import getWeekById from '@/app/actions/week/getWeekById';
+import getDayById from '@/app/actions/day/getDayById';
 import EmptyState from '@/app/components/EmptyState';
-import WeekView from '@/app/components/views/week/WeekView';
+import DayView from '@/app/components/views/day/DayView';
 
 interface IParams {
-  weekId?: string;
+  dayId?: string;
 }
 
-const WeekPage = async ({ params }: { params: IParams }) => {
-  let week: IWeek | null = null;
+const DayPage = async ({ params }: { params: IParams }) => {
+  let day: IDay | null = null;
   try {
-    week = await getWeekById({weekId: params.weekId});
-    console.log("current week:", week);
+    day = await getDayById({dayId: params.dayId});
+    console.log("current day:", day);
   
-    if (week) {
+    if (day) {
       return (
         <div className='min-h-screen max-w-screen mt-16 flex flex-col items-center'>
-          <WeekView week={week}/>
+          <DayView day={day}/>
         </div>
       );
     } else {
@@ -30,4 +30,4 @@ const WeekPage = async ({ params }: { params: IParams }) => {
   }
 };
 
-export default WeekPage;
+export default DayPage;

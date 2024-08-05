@@ -4,7 +4,7 @@ interface IParams {
     weekId?: string;
 }
 
-export default async function getWeekByWeekId(
+export default async function getWeekById(
     params: IParams
 ): Promise<IWeek | null> {
     try {

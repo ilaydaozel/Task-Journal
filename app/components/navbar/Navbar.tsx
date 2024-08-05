@@ -6,7 +6,7 @@ import MenuOverlay from "./MenuOverlay";
 import AddTaskForm from "../forms/AddTaskForm";
 
 
-const Navbar = ({currentWeek, years}: {currentWeek: IWeek | null, years: IYear[]}) => {
+const Navbar = ({currentDate, years}: {currentDate: IDayDetails, years: IYear[]}) => {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -16,19 +16,19 @@ const Navbar = ({currentWeek, years}: {currentWeek: IWeek | null, years: IYear[]
   const navLinks: INavLink[] = [
     {
       title: "Year",
-      path: `/`,
+      path: `/year/${currentDate.year && currentDate.year.id}`,
     },
     {
       title: "Month",
-      path: `/`,
+      path: `/month/${currentDate.month && currentDate.month.id}`,
     },
     {
       title: "Week",
-      path: `/week/${currentWeek && currentWeek.id}`,
+      path: `/week/${currentDate.week && currentDate.week.id}`,
     },
     {
       title: "Day",
-      path: `/`,
+      path: `/day/${currentDate.day && currentDate.day.id}`,
     },
   ];
 

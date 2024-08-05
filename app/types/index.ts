@@ -59,3 +59,10 @@ interface INavLink {
   title: string;                  // Title of the navigation link
   path: string;                   // Path for the navigation link
 }
+
+interface IDayDetails {
+  day: IDay | null;
+  week: IWeek | null;
+  month: IMonth | null;
+  year: IYear | null;
+}
