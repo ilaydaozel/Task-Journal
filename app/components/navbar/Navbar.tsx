@@ -15,6 +15,10 @@ const Navbar = ({currentDate, years}: {currentDate: IDayDetails, years: IYear[]}
 
   const navLinks: INavLink[] = [
     {
+      title: "Home",
+      path: `/`,
+    },
+    {
       title: "Year",
       path: `/year/${currentDate.year && currentDate.year.id}`,
     },
