@@ -8,15 +8,24 @@ interface CustomCalendarProps {
 
 
 const CustomCalendar: React.FC<CustomCalendarProps> = ({ years }) => {
-  const [selectedYearIndex, setSelectedYearIndex] = useState(0);
-  const [selectedMonthIndex, setSelectedMonthIndex] = useState(0);
-  const [selectedDay, setSelectedDay] = useState<IDay | null>(null);
+   const [selectedYearIndex, setSelectedYearIndex] = useState(0);
+   const [selectedMonthIndex, setSelectedMonthIndex] = useState(0);
+   const [selectedDays, setSelectedDays] = useState<IDay[]>([]);
 
-  const handleDaySelect = (day: IDay) => {
-      setSelectedDay(day);
-      console.log('Selected Day:', day);
-  };
-
+   const handleDaySelect = (day: IDay) => {
+        setSelectedDays((prevSelectedDays) => {
+        const isSelected = prevSelectedDays.some(
+            (selectedDay) => selectedDay.date.toString() === day.date.toString()
+        );
+        if (isSelected) {
+            return prevSelectedDays.filter(
+            (selectedDay) => selectedDay.date.toString() !== day.date.toString()
+            );
+        } else {
+            return [...prevSelectedDays, day];
+        }
+        });
+   };
   const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
       setSelectedYearIndex(Number(event.target.value));
       setSelectedMonthIndex(0);
@@ -43,58 +52,70 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({ years }) => {
 
       // Fill the first week with empty slots
       for (let i = 0; i < firstDay; i++) {
-          calendar.push(<div key={`empty-${i}`} className="w-10 h-10 border"></div>);
+          calendar.push(<div key={`empty-${i}`} className="w-6 h-6 border"></div>);
       }
 
-      // Fill in the days of the month
-      selectedMonth.weeks.forEach((week) => {
-          week.days.forEach((day) => {
-              calendar.push(
-                  <div
-                      key={day.date.toString()}
-                      className={`w-10 h-10 border flex items-center justify-center cursor-pointer 
-                          text-sm ${selectedDay?.date.toString() === day.date.toString() ? 'bg-blue-200' : 'bg-white'}`}
-                      onClick={() => handleDaySelect(day)}
-                  >
-                      {day.date.getDate()}
-                  </div>
-              );
-          });
+     // Fill in the days of the month
+     selectedMonth.weeks.forEach((week) => {
+        week.days.forEach((day) => {
+          const isSelected = selectedDays.some(
+            (selectedDay) => selectedDay.date.toString() === day.date.toString()
+          );
+          calendar.push(
+            <div
+              key={day.date.toString()}
+              className={`w-6 h-6 border flex items-center justify-center cursor-pointer text-sm ${
+                isSelected ? 'bg-white' : 'bg-primary-200'
+              }`}
+              onClick={() => handleDaySelect(day)}
+            >
+              {day.date.getDate()}
+            </div>
+          );
+        });
       });
 
       return calendar;
   };
 
   return (
-      <div className="flex flex-col p-4 bg-gray-100 rounded-lg shadow-md">
+      <div className="flex flex-col gap-1 justify-center items-center p-3 bg-gray-50 rounded-lg shadow-md">
           {/* Year Selection */}
-          <select
-              onChange={handleYearChange}
-              value={selectedYearIndex}
-              className="mb-2 p-2 border border-gray-300 rounded"
-          >
-              {years.map((year, index) => (
-                  <option key={year.yearNumber} value={index}>
-                      {year.yearNumber}
-                  </option>
-              ))}
-          </select>
-
+          <div className='w-fit'>
+            <select
+                onChange={handleYearChange}
+                value={selectedYearIndex}
+                className="bg-transparent text-text1-600"
+            >
+                {years.map((year, index) => (
+                    <option key={year.yearNumber} value={index}>
+                        {year.yearNumber}
+                    </option>
+                ))}
+            </select>
+          </div>
           {/* Month Navigation */}
-          <div className="flex justify-between mb-4">
-              <button onClick={() => handleMonthChange('prev')} className="px-2 py-1 bg-blue-500 text-white rounded">
-                  &lt; Prev
+          <div className="w-full relative flex justify-around mb-2">
+              <button onClick={() => handleMonthChange('prev')} className="absolute left-1 py-1 text-text1-500">
+                  &lt;
               </button>
-              <div className="text-lg font-bold text-center">
+              <div className="text-lg text-text1-700 font-semibold text-center">
                   {getMonthName(selectedMonth.monthNumber - 1)}
               </div>
-              <button onClick={() => handleMonthChange('next')} className="px-2 py-1 bg-blue-500 text-white rounded">
-                  Next &gt;
+              <button onClick={() => handleMonthChange('next')} className="absolute right-1 py-1 text-text1-500">
+                  &gt;
               </button>
           </div>
 
           {/* Calendar Grid */}
-          <div className="grid grid-cols-7">
+          <div className="grid grid-cols-7 text-xs text-text1-600">
+              <text>M</text>
+              <text>T</text>
+              <text>W</text>
+              <text>T</text>
+              <text>F</text>
+              <text>S</text>
+              <text>S</text>
               {generateCalendar()}
           </div>
       </div>
