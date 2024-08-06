@@ -6,7 +6,6 @@ export async function POST(request: Request) {
     const {
         name,
         description,
-        deadlineAt,
         workedOnDays
     } = body;
     
@@ -16,7 +15,6 @@ export async function POST(request: Request) {
             data: {
                 name,
                 description: description || null,
-                deadlineAt: new Date(deadlineAt) || null,
                 status: "to-do",
                 comments: [],
                 workedOnDayIds: workedOnDays

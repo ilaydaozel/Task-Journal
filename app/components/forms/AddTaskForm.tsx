@@ -22,6 +22,7 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
   });
   const [selectedWorkedOnDays, setSelectedWorkedOnDays] = useState<IDay[]>([]); // State for worked on days
   const router = useRouter();
+
   // Check if the element exists before setting the app element
   useEffect(() => {
     const appElement = document.getElementById('navbar');
@@ -29,6 +30,7 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
       Modal.setAppElement('#navbar');
     }
   }, []);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -50,6 +52,10 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
       });
       await handleApiResponse(response, router, "Add successful");
       setSelectedWorkedOnDays([]);
+      setFormData({
+        name: '',
+        description: '',
+      });
       onClose(); // Close the modal after successful submission
     } catch (error) {
       console.error('Error adding task:', error);
@@ -58,14 +64,16 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
     }
   };
 
+
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onClose}
-      className="fixed inset-0 flex items-center justify-center p-4 z-50"
-      overlayClassName="fixed inset-0 bg-white bg-opacity-50"
+      shouldCloseOnOverlayClick={true}
+      className={`${isOpen? "block" : "hidden"} fixed inset-0 flex items-center justify-center p-4 z-50`}
+      overlayClassName={`${isOpen? "block" : "hidden"} fixed inset-0 bg-white bg-opacity-50`}
     >
-      <div className="bg-white w-full max-w-2xl mx-auto p-6 border border-solid border-gray-200 rounded-lg shadow-md max-h-[80vh] overflow-y-auto">
+      <div className={`${isOpen? "block" : "hidden"} bg-white w-full max-w-2xl mx-auto p-6 border border-solid border-gray-200 rounded-lg shadow-md max-h-[80vh] overflow-y-auto`}>
         <div className='flex flex-col items-center p-4'>
           <h2 className='text-lg font-bold mb-4'>Add New Task</h2>
           <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full">

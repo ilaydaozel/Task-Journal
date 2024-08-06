@@ -10,7 +10,6 @@ const DayPage = async ({ params }: { params: IParams }) => {
   let day: IDay | null = null;
   try {
     day = await getDayById({dayId: params.dayId});
-    console.log("current day:", day);
   
     if (day) {
       return (

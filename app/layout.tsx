@@ -22,7 +22,6 @@ export default async function RootLayout({
 }>) {
   const today = new Date();
   const utcDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
-  console.log("utcDateToString", utcDate.toISOString())
   const currentDateObjects = await getCurrentDateObjects({date: utcDate});
   const years = await getAllYears();
 
