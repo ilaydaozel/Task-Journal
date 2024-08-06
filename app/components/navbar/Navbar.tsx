@@ -85,7 +85,8 @@ const Navbar = async ({currentDate, years}: {currentDate: IDayDetails, years: IY
             <div className="w-fit">
                 <PlusCircleIcon className='text-primary-600 h-8 w-8 hover:scale-110' onClick={openModal} />   
                 <AddTaskForm isOpen={isModalOpen} onClose={closeModal} years={years} />
-            </div>      
+            </div>  
+            <div>currentDate {currentDate.week?.id}</div>    
           </ul>
         </div>
 

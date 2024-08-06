@@ -35,6 +35,9 @@ export default async function RootLayout({
       <Navbar currentDate={currentDateObjects} years={years}></Navbar>
       <div className="bg-bg-50 text-text1-800">
         {children}
+        <h2> year:{years[0].id}</h2>
+      <h1>Day: {day?.id}</h1>
+      <h1>date.toISOString,: {date.toISOString()}</h1>
       </div>
     </Suspense></body>
   </html>
