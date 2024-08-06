@@ -6,7 +6,6 @@ export async function POST(request: Request) {
     const {
         name,
         description,
-        acceptanceCriteria,
         deadlineAt,
         workedOnDays
     } = body;
@@ -17,14 +16,13 @@ export async function POST(request: Request) {
             data: {
                 name,
                 description: description || null,
-                acceptanceCriteria: acceptanceCriteria || null,
-                startedAt: null,
-                completedAt: null,
                 deadlineAt: new Date(deadlineAt) || null,
                 status: "to-do",
                 comments: [],
                 workedOnDayIds: workedOnDays
                     .map((day: IDay) => day.id).filter((id: string | undefined): id is string => id !== undefined)|| [],
+                type: "task",
+                tags: [],
             },
         });
 

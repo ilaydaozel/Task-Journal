@@ -6,11 +6,14 @@ import EmptyState from '@/app/components/EmptyState';
 import WeekView from '@/app/components/views/week/WeekView';
 export const dynamic = 'force-dynamic';
 
+interface IParams {
+  weekId?: string;
+}
 
-const WeekPage = async () => {
+const WeekPage = async ({ params }: { params: IParams }) => {
+  let week: IWeek | null = null;
   try {
-    const week = await getCurrentWeek();
-    console.log("current week:", week);
+    week = await getWeekById(params);
   
       return (
         <div className='min-h-screen max-w-screen mt-16 flex flex-col items-center'>

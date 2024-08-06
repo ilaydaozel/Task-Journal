@@ -7,15 +7,15 @@ interface IDateParams {
 export default async function getDayByDate(params: IDateParams): Promise<IDay | null> {
     try {
         const { date } = params;
-        /*
+
         // Ensure the date is a valid Date object
         if (!date || isNaN(date.getTime())) {
             throw new Error("Invalid date provided.");
-        }*/
+        }
 
         const day = await prisma.day.findUnique({
             where: {
-                date: "2024-08-06T21:00:00.000Z", // Assuming the date field in the Day model is a DateTime
+                date: date.toISOString(), // Assuming the date field in the Day model is a DateTime
             },
             include: {
                 tasks: true, // Include tasks associated with the day

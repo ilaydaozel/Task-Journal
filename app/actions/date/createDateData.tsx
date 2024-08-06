@@ -17,9 +17,6 @@ async function createYearAndMonths(year: number) {
             },
         });
 
-        // Create months and collect their IDs
-        const monthIds: string[] = []; // Initialize an array to store month IDs
-
         for (let month = 1; month <= 12; month++) {    
             const monthRecord = await createMonth(month, yearRecord);
             yearRecord = await prisma.year.update({
@@ -31,12 +28,6 @@ async function createYearAndMonths(year: number) {
                 },
             });
         }
-
-        // Update the year record with the month IDs
-        yearRecord = await prisma.year.update({
-            where: { id: yearRecord.id },
-            data: { monthIds: monthIds },
-        });
 
         console.log("Months created for year:", year);
     }
@@ -72,8 +63,8 @@ async function createMonth(
             },
         });
 
-        const startDate = new Date(yearRecord.yearNumber, month - 1, 1);
-        const endDate = new Date(yearRecord.yearNumber, month, 1);
+        const startDate = new Date(Date.UTC(yearRecord.yearNumber, month - 1, 1));
+        const endDate = new Date(Date.UTC(yearRecord.yearNumber, month, 1));
 
         let currentDate = startDate;
 
@@ -168,11 +159,11 @@ async function deleteExistingData(){
     console.log("Deleted all days, weeks, months, and years!");
 }
 
-export default async function createYearsMonthsWeeksAndDays() {
+export default async function createDateData() {
     console.log("Started creating!");
 
     const currentYear = new Date().getFullYear();
-    const endYear = currentYear + 2;
+    const endYear = currentYear + 3;
     //deleteExistingData();
 
     for (let year = currentYear; year < endYear; year++) {
