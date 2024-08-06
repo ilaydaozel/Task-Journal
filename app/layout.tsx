@@ -22,9 +22,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const today = new Date();
-  const currentDateObjects = await getCurrentDateObjects({date: new Date(today.getFullYear(), today.getMonth(), today.getDate())});
-  const years = await getAllYears();
   const date = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  const currentDateObjects = await getCurrentDateObjects({date: date.toISOString()});
+  const years = await getAllYears();
   const day = await getDayByDate({date: date})
   console.log("sent day: " + date)
   console.log("day", day);
@@ -39,6 +39,7 @@ export default async function RootLayout({
         <h1> sent date: {date.toISOString()}</h1>
         <h2> week:{years[0].months[7].weeks[0].id}</h2>
       <h1>Day: {day?.id}</h1>
+      <h3>currentdateobjs year id {currentDateObjects.year?.id}</h3>
       <h1>date.toISOString,: {date.toISOString()}</h1>
       </div>
     </Suspense></body>
