@@ -12,7 +12,7 @@ export default async function getCurrentDateObjects(params: IDateParams): Promis
         // Retrieve the day based on the date
         const day = await prisma.day.findUnique({
             where: {
-                date: date, // Match the date
+                date: date.toISOString(), // Match the date
             },
             include: {
                 tasks: true, // Include tasks associated with the day
