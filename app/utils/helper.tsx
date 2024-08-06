@@ -118,7 +118,7 @@ export const printNumericDateDM = (date: Date | undefined) => {
 export const printStringDateDM = (date: Date | undefined) => {
   if(date instanceof Date) {
     const day = date.getDate()
-    const month = date.getMonth() + 1;
+    const month = date.getMonth();
     return (day<10?"0"+day:day)+" "+getMonthNameAbbreviated(month);
   }else{
     return "none"
@@ -128,7 +128,7 @@ export const printStringDateDM = (date: Date | undefined) => {
 export const printStringDateDMYD = (date: Date | undefined) => {
   if(date instanceof Date) {
     const day = date.getDate()
-    const month = date.getMonth() + 1;
+    const month = date.getMonth();
     const year = date.getFullYear();
     return (day<10?"0"+day:day)+" "+getMonthNameAbbreviated(month)+" "+year+", "+ getDayOfTheWeek(date.getDay());
   }else{
