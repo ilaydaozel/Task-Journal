@@ -8,11 +8,7 @@ interface IDateParams {
 export default async function getCurrentDateObjects(params: IDateParams): Promise<IDayDetails> {
     try {
         const { date } = params;
-        // Ensure the date is a valid Date object
-        if (!date || isNaN(date.getTime())) {
-            throw new Error("Invalid date provided.");
-        }
-
+        
         // Retrieve the day based on the date
         const day = await prisma.day.findUnique({
             where: {
