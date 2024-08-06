@@ -73,7 +73,7 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
       className={`${isOpen? "block" : "hidden"} fixed inset-0 flex items-center justify-center p-4 z-50`}
       overlayClassName={`${isOpen? "block" : "hidden"} fixed inset-0 bg-white bg-opacity-50`}
     >
-      <div className={`${isOpen? "block" : "hidden"} bg-white w-full max-w-2xl mx-auto p-6 border border-solid border-gray-200 rounded-lg shadow-md max-h-[80vh] overflow-y-auto`}>
+      <div className={`${isOpen? "block" : "hidden"} bg-white w-full max-w-2xl mx-auto p-6 border border-solid border-gray-200 rounded-lg shadow-md max-h-[80vh] overflow-y-auto text-text1-800`}>
         <div className='flex flex-col items-center p-4'>
           <h2 className='text-lg font-bold mb-4'>Add New Task</h2>
           <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full">
