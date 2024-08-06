@@ -26,6 +26,7 @@ export default async function RootLayout({
   const years = await getAllYears();
   const date = new Date(today.getFullYear(), today.getMonth(), today.getDate())
   const day = await getDayByDate({date: date})
+  console.log("sent day: " + date)
   console.log("day", day);
   return (
   <html lang="en">
@@ -35,7 +36,8 @@ export default async function RootLayout({
       <Navbar currentDate={currentDateObjects} years={years}></Navbar>
       <div className="bg-bg-50 text-text1-800">
         {children}
-        <h2> year:{years[0].id}</h2>
+        <h1> sent date: {date.toISOString()}</h1>
+        <h2> week:{years[0].months[7].weeks[0].id}</h2>
       <h1>Day: {day?.id}</h1>
       <h1>date.toISOString,: {date.toISOString()}</h1>
       </div>
