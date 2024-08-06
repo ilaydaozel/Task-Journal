@@ -41,10 +41,11 @@ const SideSection = ({ task }: { task: ITask }) => {
                 <option value="inProgress" className={`${getStatusClassName("inProgress")}`}>In Progress</option>
                 <option value="done" className={`${getStatusClassName("done")}`}>Done</option>
             </select>
+            {task?.deadlineAt &&  
             <div className="mt-2 text-gray-700">
-              <strong>Deadline:</strong> {task?.deadlineAt ? new Date(task.deadlineAt).toDateString() : "No deadline set."}
+              <strong>Deadline:{ new Date(task.deadlineAt).toDateString()}</strong> 
             </div>
-
+            }
             </div>
           </div>
         </div>
