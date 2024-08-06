@@ -17,12 +17,13 @@ model Task {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   name              String
   description       String?
-  acceptanceCriteria String?
-  startedAt         DateTime?
-  completedAt       DateTime?
   deadlineAt        DateTime?
   status            String   @default("to-do")
   comments          String[]
+  tags              String[]
+  type              String
+  startTime         DateTime? 
+  endTime           DateTime?
   workedOnDays      Day[]    @relation(fields: [workedOnDayIds], references: [id])
   workedOnDayIds    String[]  @db.ObjectId
   createdAt         DateTime @default(now())

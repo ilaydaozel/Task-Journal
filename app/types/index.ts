@@ -2,12 +2,13 @@ interface ITask {
   id?: string;                    // Unique identifier for the task
   name: string;                   // Name of the task
   description?: string | null;    // Detailed description of the task
-  acceptanceCriteria?: string | null; // Criteria for accepting the task as completed
-  startedAt: Date | null;                // Start date of the task
-  completedAt: Date | null;              // Completion date of the task
   deadlineAt: Date | null;               // Deadline for the task
   status: string;                 // Current status of the task
-  comments: string[];             // List of comments associated with the task                
+  comments: string[];             // List of comments associated with the task 
+  tags: string[];                 // Tags associated with the task
+  type: string;                   // Type of the task
+  startTime?: Date | null;        // Start time of the task for the day
+  endTime?: Date | null;          // End time of the task for the day              
   workedOnDays: IDay[];           // Days the task was worked on
   workedOnDayIds: string[];       // Array of IDs for worked on days
   createdAt: Date;                // Timestamp when the task was created
