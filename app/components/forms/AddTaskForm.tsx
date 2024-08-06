@@ -19,8 +19,6 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    acceptanceCriteria: '',
-    deadlineAt: '',
   });
   const [selectedWorkedOnDays, setSelectedWorkedOnDays] = useState<IDay[]>([]); // State for worked on days
   const router = useRouter();
@@ -48,7 +46,6 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
     try {
       const response = axios.post('/api/task/createTask', {
         ...formData,
-        deadlineAt: formData.deadlineAt ? new Date(formData.deadlineAt) : null,
         workedOnDays: selectedWorkedOnDays,
       });
       await handleApiResponse(response, router, "Add successful");
@@ -86,19 +83,6 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                />
-                <InputField 
-                  label="Acceptance Criteria"
-                  name="acceptanceCriteria"
-                  value={formData.acceptanceCriteria}
-                  onChange={handleChange}
-                />
-                <InputField 
-                  label="Deadline"
-                  name="deadlineAt"
-                  value={formData.deadlineAt}
-                  onChange={handleChange}
-                  type="date"
                 />
               </div>
               <div className='flex flex-col gap-4 w-full'>

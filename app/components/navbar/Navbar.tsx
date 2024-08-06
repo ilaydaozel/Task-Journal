@@ -30,7 +30,6 @@ const Navbar = async ({currentDate, years}: {currentDate: IDayDetails, years: IY
       title: "Home",
       path: `/`,
     },
-    /*
     {
       title: "Year",
       path: `/year/${currentDate.year && currentDate.year.id}`,
@@ -42,13 +41,13 @@ const Navbar = async ({currentDate, years}: {currentDate: IDayDetails, years: IY
 
     {
       title: "Week",
-      path: `/week`,
+      path: `/week/${currentDate.week && currentDate.week.id}`,
     },
     
     {
       title: "Day",
       path: `/day/${currentDate.day && currentDate.day.id}`,
-    },*/
+    },
   ];
 
   return (
@@ -86,10 +85,8 @@ const Navbar = async ({currentDate, years}: {currentDate: IDayDetails, years: IY
                 <PlusCircleIcon className='text-primary-600 h-8 w-8 hover:scale-110' onClick={openModal} />   
                 <AddTaskForm isOpen={isModalOpen} onClose={closeModal} years={years} />
             </div>  
-            <div>currentDate {currentDate.week?.id}</div>    
           </ul>
         </div>
-
       </div>
       {navbarOpen ? <MenuOverlay links={navLinks} /> : null}
     </nav>
