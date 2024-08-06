@@ -86,7 +86,7 @@ export const getMonthNameAbbreviated = (month: number) => {
 
 
   // Function to get the day of the week based on the day index (0-6)
-export  const getDayOfTheWeek = (dayNumber: number) => {
+export const getDayOfTheWeek = (dayNumber: number) => {
     const dayNames = [
       'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
     ];
