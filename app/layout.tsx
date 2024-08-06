@@ -7,6 +7,7 @@ import Loading from "./loading";
 import Navbar from "./components/navbar/Navbar";
 import getAllYears from "./actions/year/getAllYears";
 import getCurrentDateObjects from "./actions/date/getCurrentDateObjects";
+export const dynamic = 'force-dynamic';
 
 const inter = Inter({ subsets: ["latin"] });
 
