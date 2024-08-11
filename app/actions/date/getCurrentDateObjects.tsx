@@ -18,8 +18,10 @@ export default async function getCurrentDateObjects(params: IDateParams): Promis
                 tasks: true, // Include tasks associated with the day
                 week: {
                     include: {
+                        tasks: true,
                         month: {
                             include: {
+                                tasks: true,
                                 year: true, // Include year associated with the month
                             },
                         },

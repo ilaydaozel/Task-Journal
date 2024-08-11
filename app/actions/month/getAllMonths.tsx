@@ -4,8 +4,10 @@ export default async function getAllMonths(): Promise<IMonth[]> {
     try {
         const months = await prisma.month.findMany({
             include: {
+                tasks: true,
                 weeks: {
                     include: {
+                        tasks: true,
                         days: {
                             include: {
                                 tasks: true,

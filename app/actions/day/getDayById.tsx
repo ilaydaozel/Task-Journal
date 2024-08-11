@@ -19,6 +19,7 @@ export default async function getDayByDayId(params: IDayParams): Promise<IDay | 
             include: {
                 tasks: true,
                 week: true, // Include week associated with the day
+                timeSlots: true,
             },
         });
 

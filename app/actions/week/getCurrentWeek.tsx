@@ -25,6 +25,7 @@ export default async function getCurrentWeek(): Promise<IWeek | null> {
                     id: day?.weekId, // Match the date
                 },
                 include: {
+                    tasks: true,
                     days: {
                         include: {
                             tasks: true, // Include tasks associated with the day

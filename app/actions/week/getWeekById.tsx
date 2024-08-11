@@ -21,6 +21,7 @@ export default async function getWeekById(
                 id: weekId,
             },
             include: {
+                tasks: true,
                 days: {
                     include: {
                         tasks: true

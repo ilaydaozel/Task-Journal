@@ -4,6 +4,7 @@ export default async function getAllWeeks(): Promise<IWeek[]> {
     try {
         const weeks = await prisma.week.findMany({
             include: {
+                tasks: true,
                 days: {
                     include: {
                         tasks: true,

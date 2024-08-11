@@ -20,6 +20,7 @@ export default async function getDayByDate(params: IDateParams): Promise<IDay | 
             include: {
                 tasks: true, // Include tasks associated with the day
                 week: true,  // Include week associated with the day
+                timeSlots: true, // Include time slots
             },
         });
 

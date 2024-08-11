@@ -6,6 +6,7 @@ export default async function getAllDays(): Promise<IDay[]> {
             include: {
                 tasks: true,
                 week: true,
+                timeSlots: true,
             },
         });
         return days as IDay[];

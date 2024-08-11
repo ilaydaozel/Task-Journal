@@ -20,6 +20,7 @@ export default async function getCurrentDay({date}:IParams): Promise<IDay | null
             include: {
                 tasks: true, // Include tasks associated with the day
                 week: true,
+                timeSlots: true,
             },
         });
 

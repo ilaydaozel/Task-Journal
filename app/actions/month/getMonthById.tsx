@@ -17,8 +17,10 @@ export default async function getMonthById(params: IMonthParams): Promise<IMonth
                 id: monthId,
             },
             include: {
+                tasks: true,
                 weeks: {
                     include: {
+                        tasks: true,
                         days: {
                             include: {
                                 tasks: true,
