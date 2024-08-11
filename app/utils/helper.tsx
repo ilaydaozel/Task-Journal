@@ -138,11 +138,11 @@ export const printStringDateDMYD = (date: Date | undefined) => {
 
 export const getStatusClassName = (status: string | null) => {
   switch (status) {
-    case 'to-do':
+    case 'TODO':
       return 'bg-todo text-white';
-    case 'inProgress':
+    case 'INPROGRESS':
       return 'bg-inProgress text-white';
-    case 'done':
+    case 'DONE':
       return 'bg-done text-white';
     default:
       return 'bg-white';

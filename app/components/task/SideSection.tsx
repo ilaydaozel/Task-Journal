@@ -37,9 +37,9 @@ const SideSection = ({ task }: { task: ITask }) => {
                 onChange={handleStatusChange}
                 className={`font-semibold p-2 rounded text-white ${getStatusClassName(task.status)}`}
                 >
-                <option value="to-do" className={`${getStatusClassName("to-do")}`}>To-Do</option>
-                <option value="inProgress" className={`${getStatusClassName("inProgress")}`}>In Progress</option>
-                <option value="done" className={`${getStatusClassName("done")}`}>Done</option>
+                <option value="TODO" className={`${getStatusClassName("TODO")}`}>To-Do</option>
+                <option value="INPROGRESS" className={`${getStatusClassName("INPROGRESS")}`}>In Progress</option>
+                <option value="DONE" className={`${getStatusClassName("DONE")}`}>Done</option>
             </select>
             {task?.deadlineAt &&  
             <div className="mt-2 text-gray-700">
