@@ -13,21 +13,60 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum TaskType {
+  TASK
+  MEETING
+  NOTE
+  HABIT
+}
+
+enum TaskStatus {
+  TODO
+  INPROGRESS
+  DONE
+}
+
 model Task {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   name              String
   description       String?
   deadlineAt        DateTime?
-  status            String   @default("to-do")
+  status            TaskStatus @default(TODO)
   comments          String[]
   tags              String[]
-  type              String
-  startTime         DateTime? 
-  endTime           DateTime?
+  type              TaskType @default(TASK)
+  
+  // time relationships
+  timeslots         TimeSlot[] @relation("TaskTimeSlots")
   workedOnDays      Day[]    @relation(fields: [workedOnDayIds], references: [id])
   workedOnDayIds    String[]  @db.ObjectId
+  workedOnWeeks     Week[]   @relation(fields: [workedOnWeekIds], references: [id])
+  workedOnWeekIds   String[] @db.ObjectId
+  workedOnMonths    Month[]  @relation(fields: [workedOnMonthIds], references: [id])
+  workedOnMonthIds  String[] @db.ObjectId
+  workedOnYears     Year[]   @relation(fields: [workedOnYearIds], references: [id])
+  workedOnYearIds   String[] @db.ObjectId
+
+  // nested task relationships
+  parentTask        Task?     @relation("TaskParentChild", fields: [parentTaskId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentTaskId      String?   @db.ObjectId
+  subTasks          Task[]    @relation("TaskParentChild")
+  // if a task is private
+  private           Boolean   @default(false)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+}
+
+model TimeSlot {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  task              Task      @relation("TaskTimeSlots", fields: [taskId], references: [id])
+  taskId            String    @db.ObjectId
+  day               Day       @relation(fields: [dayId], references: [id])
+  dayId             String    @db.ObjectId
+  startTime         DateTime
+  endTime           DateTime
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 }
 
 model Day {
@@ -37,6 +76,7 @@ model Day {
   taskIds           String[]  @db.ObjectId
   week              Week      @relation(fields: [weekId], references: [id])
   weekId            String    @db.ObjectId
+  timeSlots         TimeSlot[]
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }
@@ -45,6 +85,8 @@ model Week {
   id                String   @id @default(auto()) @map("_id") @db.ObjectId
   days              Day[]
   dayIds            String[] @db.ObjectId
+  tasks             Task[]   @relation(fields: [taskIds], references: [id])
+  taskIds           String[]  @db.ObjectId
   month             Month    @relation(fields: [monthId], references: [id])
   monthId           String   @db.ObjectId
   createdAt         DateTime @default(now())
@@ -56,6 +98,8 @@ model Month {
   monthNumber       Int
   weeks             Week[]
   weekIds           String[] @db.ObjectId
+  tasks             Task[]   @relation(fields: [taskIds], references: [id])
+  taskIds           String[]  @db.ObjectId
   year              Year     @relation(fields: [yearId], references: [id])
   yearId            String   @db.ObjectId
   createdAt         DateTime @default(now())
@@ -69,6 +113,8 @@ model Year {
   yearNumber        Int      @unique
   months            Month[]
   monthIds          String[] @db.ObjectId
+  tasks             Task[]   @relation(fields: [taskIds], references: [id])
+  taskIds           String[]  @db.ObjectId
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }

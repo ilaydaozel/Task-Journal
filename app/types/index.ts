@@ -1,64 +1,109 @@
-interface ITask {
-  id?: string;                    // Unique identifier for the task
-  name: string;                   // Name of the task
-  description?: string | null;    // Detailed description of the task
-  deadlineAt: Date | null;               // Deadline for the task
-  status: string;                 // Current status of the task
-  comments: string[];             // List of comments associated with the task 
-  tags: string[];                 // Tags associated with the task
-  type: string;                   // Type of the task
-  startTime?: Date | null;        // Start time of the task for the day
-  endTime?: Date | null;          // End time of the task for the day              
-  workedOnDays: IDay[];           // Days the task was worked on
-  workedOnDayIds: string[];       // Array of IDs for worked on days
-  createdAt: Date;                // Timestamp when the task was created
-  updatedAt: Date;                // Timestamp when the task was last updated
+enum TaskType {
+  TASK = 'TASK',
+  MEETING = 'MEETING',
+  NOTE = 'NOTE',
+  HABIT = 'HABIT'
 }
 
+enum TaskStatus {
+  TODO = 'TODO',
+  INPROGRESS = 'INPROGRESS',
+  DONE = 'DONE'
+}
+
+interface ITask {
+  id?: string;
+  name: string;
+  description?: string | null;
+  deadlineAt: Date | null;
+  status: string;
+  comments: string[];
+  tags: string[];
+  type: TaskType;
+  
+  timeslots: ITimeSlot[];
+  workedOnDays: IDay[];
+  workedOnDayIds: string[];
+  workedOnWeeks: IWeek[];
+  workedOnWeekIds: string[];
+  workedOnMonths: IMonth[];
+  workedOnMonthIds: string[];
+  workedOnYears: IYear[];
+  workedOnYearIds: string[];
+
+  parentTask?: ITask;
+  parentTaskId?: string;
+  subTasks: ITask[];
+  
+  private: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface ITimeSlot {
+  id?: string;
+  task: ITask;
+  taskId: string;
+  day: IDay;
+  dayId: string;
+  startTime: Date;
+  endTime: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+
 interface IDay {
-  id?: string;                    // Unique identifier for the day
-  date: Date;                     // Specific date of the day
-  tasks: ITask[];                 // Tasks assigned to the day
-  taskIds: string[];              // Array of task IDs assigned to the day
-  week: IWeek;                    // Week the day belongs to
-  weekId: string;                 // ID of the week
-  createdAt: Date;                // Timestamp when the day was created
-  updatedAt: Date;                // Timestamp when the day was last updated
+  id?: string;
+  date: Date;
+  tasks: ITask[];
+  taskIds: string[];
+  week: IWeek;
+  weekId: string;
+  timeSlots: ITimeSlot[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface IWeek {
-  id?: string;                    // Unique identifier for the week
-  days: IDay[];                   // Days in the week
-  dayIds: string[];               // Array of day IDs in the week
-  month: IMonth;                  // Month the week belongs to
-  monthId: string;                // ID of the month
-  createdAt: Date;                // Timestamp when the week was created
-  updatedAt: Date;                // Timestamp when the week was last updated
+  id?: string;
+  days: IDay[];
+  dayIds: string[];
+  tasks: ITask[];
+  taskIds: string[];
+  month: IMonth;
+  monthId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface IMonth {
-  id?: string;                    // Unique identifier for the month
-  monthNumber: number;            // Month number (1-12)
-  weeks: IWeek[];                 // Weeks in the month
-  weekIds: string[];              // Array of week IDs in the month
-  year: IYear;                    // Year the month belongs to
-  yearId: string;                 // ID of the year
-  createdAt: Date;                // Timestamp when the month was created
-  updatedAt: Date;                // Timestamp when the month was last updated
+  id?: string;
+  monthNumber: number;
+  weeks: IWeek[];
+  weekIds: string[];
+  tasks: ITask[];
+  taskIds: string[];
+  year: IYear;
+  yearId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface IYear {
-  id?: string;                    // Unique identifier for the year
-  yearNumber: number;             // Year number (e.g., 2024)
-  months: IMonth[];               // Months in the year
-  monthIds: string[];             // Array of month IDs in the year
-  createdAt: Date;                // Timestamp when the year was created
-  updatedAt: Date;                // Timestamp when the year was last updated
+  id?: string;
+  yearNumber: number;
+  months: IMonth[];
+  monthIds: string[];
+  tasks: ITask[];
+  taskIds: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface INavLink {
-  title: string;                  // Title of the navigation link
-  path: string;                   // Path for the navigation link
+  title: string;
+  path: string;
 }
 
 interface IDayDetails {
