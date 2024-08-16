@@ -19,6 +19,7 @@
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
     "react-modal": "^3.16.1",
+    "react-quill": "^2.0.0",
     "vercel": "^35.2.3"
   },
   "devDependencies": {

@@ -1,73 +1,67 @@
 import React, { useState, useRef, useEffect } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // Import Quill styles
+import { TrashIcon } from '@heroicons/react/24/outline'; // Import the delete icon
 
-const EditableField = ({ initialValue, onSave, placeholder=''}: { initialValue: string | null, onSave: (newValue: string) => void, placeholder?: string }) => {
+interface EditableFieldProps {
+  initialValue: string | null;
+  onSave: (newValue: string) => void;
+  onDelete?: () => void; // Add optional delete handler
+  placeholder?: string;
+}
+
+const EditableField: React.FC<EditableFieldProps> = ({
+  initialValue,
+  onSave,
+  onDelete,
+  placeholder = ''
+}) => {
   const [editMode, setEditMode] = useState(false);
   const [editedValue, setEditedValue] = useState(initialValue || "");
-  const inputRef = useRef<HTMLTextAreaElement>(null);
-    
-  const makeStringClickable = (text: string): React.ReactNode[] => {
-    // Regular expression to match URLs
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const editorRef = useRef<HTMLDivElement>(null);
 
-    // Split the text into parts (links, lists, and non-links)
-    const parts = text.split(urlRegex);
-
-    const result = parts.map((part, index) => {
-      if (part.match(urlRegex)) {
-        return (
-          <a key={index} href={part} target="_blank" rel="noopener noreferrer" style={{ color: 'blue' }}>{part}</a>
-        );
-      } else {
-        // Preserve newlines if there's a line break (\n)
-        const lines = part.split('\n').map((line, idx) => (
-          <React.Fragment key={idx}>
-            <ul>{line}</ul>
-          </React.Fragment>
-        ));
-        return <React.Fragment key={index}>{lines}</React.Fragment>;
-      }
-    });
-  
-    return result;
-  };
-
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
-        if(editedValue !== initialValue){
-            onSave(editedValue);
-        }
-        setEditMode(false);
-      }
-    };
-
-    if (editMode) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
+  const handleSave = () => {
+    if (editedValue !== initialValue) {
+      onSave(editedValue);
     }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [editMode, editedValue, initialValue, onSave]);
-
-
+    setEditMode(false);
+  };
+  
   return (
-    <div className= 'w-full h-full text-left p-2 border overflow-wrap break-all text-xs min-w-10 min-h-8 relative rounded-md' onClick={() => setEditMode(true)}>
-        {editMode && (
-          <textarea
-            ref={inputRef}
+    <div className="w-full h-full text-left p-2 border overflow-wrap break-all text-xs min-w-10 min-h-8 relative rounded-md">
+      {editMode ? (
+        <div ref={editorRef} className="relative w-full flex flex-col">
+          <ReactQuill
             value={editedValue}
-            onChange={(e) => setEditedValue(e.target.value)}
+            onChange={setEditedValue}
             placeholder={placeholder}
-            className='absolute resize-none inset-0 w-full h-full shadow-lg border border-text1-100 scale-102 z-10'
+            className="h-full w-full"
           />
-        ) }
-        <div className='min-w-16 min-h-8'>
-          {makeStringClickable(editedValue || "")}
+          <div className='flex gap-2 p-2'>
+          <button
+            onClick={handleSave}
+            className="p-2 bg-blue-500 text-white rounded"
+          >
+            Save
+          </button>
+          {onDelete && (
+            <button
+              onClick={onDelete}
+              className="p-2 bg-red-500 text-white rounded"
+            >
+              Delete
+            </button>
+          )}
+
+          </div>
         </div>
+      ) : (
+        <div
+          className="min-w-16 min-h-8 cursor-pointer"
+          onClick={() => setEditMode(true)}
+          dangerouslySetInnerHTML={{ __html: editedValue }}
+        />
+      )}
     </div>
   );
 };

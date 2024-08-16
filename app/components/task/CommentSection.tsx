@@ -5,7 +5,6 @@ import EditableField from "../formComponents/EditableField";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { TrashIcon } from '@heroicons/react/24/outline'; // Import a delete icon
 
 const CommentSection = ({ task }: { task: ITask }) => {
   const router = useRouter();
@@ -48,13 +47,11 @@ const CommentSection = ({ task }: { task: ITask }) => {
       <div>
         <div className="mb-4 flex flex-col gap-4">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Comments</h2>
-          <div className="h-20 rounded-md outline outline-2 outline-primary-600">
             <EditableField
                 initialValue={""}
                 onSave={(newValue) => handleAddComment(task.id || "", newValue)}
                 placeholder="Write a comment.."
             />
-          </div>
           <ul className="mt-2 list-disc list-inside">
             {comments && comments.length > 0 ? (
               comments.map((comment, index) => (
@@ -66,10 +63,7 @@ const CommentSection = ({ task }: { task: ITask }) => {
                   <EditableField
                     initialValue={comment}
                     onSave={(newValue) => handleUpdateComment(task.id || "", index, newValue)}
-                  />
-                  <TrashIcon
-                    className="w-5 h-5 text-red-500 ml-2 cursor-pointer"
-                    onClick={() => handleDeleteComment(task.id || "", index)}
+                    onDelete={() => handleDeleteComment(task.id || "", index)} // Pass delete handler
                   />
                 </li>
               ))
