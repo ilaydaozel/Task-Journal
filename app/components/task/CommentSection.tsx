@@ -50,8 +50,9 @@ const CommentSection = ({ task }: { task: ITask }) => {
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Comments</h2>
           <div className="h-20 rounded-md outline outline-2 outline-primary-600">
             <EditableField
-                initialValue={"Write a comment.."}
+                initialValue={""}
                 onSave={(newValue) => handleAddComment(task.id || "", newValue)}
+                placeholder="Write a comment.."
             />
           </div>
           <ul className="mt-2 list-disc list-inside">

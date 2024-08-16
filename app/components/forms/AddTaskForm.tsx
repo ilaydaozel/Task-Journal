@@ -91,6 +91,7 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
+                  type='textarea'
                 />
               </div>
               <div className='flex flex-col gap-4 w-full'>

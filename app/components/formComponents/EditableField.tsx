@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const EditableField = ({ initialValue, onSave}: { initialValue: string | null, onSave: (newValue: string) => void }) => {
+const EditableField = ({ initialValue, onSave, placeholder=''}: { initialValue: string | null, onSave: (newValue: string) => void, placeholder?: string }) => {
   const [editMode, setEditMode] = useState(false);
   const [editedValue, setEditedValue] = useState(initialValue || "");
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -61,6 +61,7 @@ const EditableField = ({ initialValue, onSave}: { initialValue: string | null, o
             ref={inputRef}
             value={editedValue}
             onChange={(e) => setEditedValue(e.target.value)}
+            placeholder={placeholder}
             className='absolute resize-none inset-0 w-full h-full shadow-lg border border-text1-100 scale-102 z-10'
           />
         ) }

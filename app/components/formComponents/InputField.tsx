@@ -7,9 +7,10 @@ interface InputFieldProps {
   onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   required?: boolean;
   type?: string;
+  placeholder?: string;
 }
 
-const InputField: React.FC<InputFieldProps> = ({ label, name, value, onChange, required = false , type}) => {
+const InputField: React.FC<InputFieldProps> = ({ label, name, value, onChange, required = false , type, placeholder = ''}) => {
   return (
     <div className="flex flex-col gap-1">
       <label className="text-sm font-semibold">{label}</label>
@@ -19,6 +20,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, name, value, onChange, r
           value={value as string}
           onChange={onChange as (event: ChangeEvent<HTMLTextAreaElement>) => void}
           required={required}
+          placeholder={placeholder}
           className="border border-gray-300 rounded p-2"
         />
       ) : (
@@ -28,6 +30,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, name, value, onChange, r
           value={value}
           onChange={onChange}
           required={required}
+          placeholder={placeholder}
           className="border border-gray-300 rounded p-2"
         />
       )}
