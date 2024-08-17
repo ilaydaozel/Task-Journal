@@ -3,6 +3,7 @@ import TextEditor from './TextEditor';
 import { convertFromRaw } from 'draft-js';
 import { convertToHTML } from 'draft-convert';
 
+
 interface ColorStyleMap {
   [key: string]: {
     color: string;
@@ -21,6 +22,7 @@ const colorStyleMap: ColorStyleMap = {
 
 const convertRawToHTML = (rawContent: string | null): string => {
   if (!rawContent) return '';
+  console.log(rawContent);
   try {
     // Parse the raw JSON
     const contentState = convertFromRaw(JSON.parse(rawContent));
@@ -38,6 +40,14 @@ const convertRawToHTML = (rawContent: string | null): string => {
         // Handle custom block types if needed
         if (block.type === 'blockquote') {
           return <blockquote />;
+        }
+        return undefined;
+      },
+      entityToHTML: (entity, originalText) => {
+        // Handle LINK entities
+        if (entity.type === 'LINK') {
+          const { url } = entity.data;
+          return <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: colorStyleMap['blue'].color, textDecoration: 'underline'}}>{originalText}</a>;
         }
         return undefined;
       },
@@ -77,7 +87,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
 
 
   return (
-    <div className={`w-full h-full text-left overflow-wrap break-all text-xs min-w-10 min-h-8 relative ${editMode && "p-6 border b-1 border-primary-400"}`}>
+    <div className={`w-full h-full text-left overflow-wrap break-all text-xs min-w-10 min-h-24 relative ${editMode && "p-6 border b-1 border-primary-400"}`}>
       {editMode ? (
         <div className="relative w-full h-full flex flex-col">
           <TextEditor
@@ -85,7 +95,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
             onChange={setEditedValue}
             placeholder={placeholder}
           />
-          <div className="flex gap-4 p-2 mt-2 font-bold text-md">
+          <div className="flex gap-4 p-2 mt-2 font-bold text-base">
             <button
               onClick={handleSave}
               className="text-inProgress hover:scale-105"
@@ -104,11 +114,11 @@ const EditableField: React.FC<EditableFieldProps> = ({
       ) : (
         <div className="w-full h-full flex flex-col gap-2">
           <div
-            className="w-full h-full min-h-8 cursor-pointer p-2 border rounded-md flex-grow"
+            className="w-full h-full min-h-16 cursor-pointer p-2 border rounded-md flex-grow text-base"
             onClick={() => isEditableWhenClicked && setEditMode(true)}
             dangerouslySetInnerHTML={{ __html: convertRawToHTML(editedValue) || placeholder }}
           />
-          <div className="flex gap-4 pl-2 font-bold text-md">
+          <div className="flex gap-4 pl-2 font-bold text-base">
             <button
               onClick={() => { setEditMode(true);}}
               className="text-primary-700 hover:scale-105"

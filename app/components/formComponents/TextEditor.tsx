@@ -1,7 +1,8 @@
-import React, { CSSProperties, useRef, useState, useEffect } from 'react';
+import React, { CSSProperties, useRef, useState } from 'react';
 import { convertFromRaw, convertToRaw, Editor, EditorState, RichUtils, Modifier, CompositeDecorator, ContentBlock, ContentState } from 'draft-js';
 import FormatButton from './FormatButton';
 import ColorControls from './ColorControls';
+import { createLinkDecorator, onAddLink } from './LinkComponent';
 
 interface TextEditorProps {
   value: string;
@@ -26,26 +27,20 @@ const colorStyleMap: ColorStyleMap = {
 };
 
 
+
 const styles: { [key: string]: CSSProperties } = {
   root: {
-    fontFamily: 'Georgia, serif',
-    fontSize: 14,
+    fontSize: '0.8rem',
     maxHeight: '50vh',
   },
   editor: {
     borderTop: '1px solid #ddd',
     cursor: 'text',
-    fontSize: 16,
+    fontSize: '1rem',
     marginTop: 20,
     paddingTop: 20,
-    minHeight: 200,
+    minHeight: '20vh',
     overflowY: 'auto',
-  },
-  controls: {
-    fontFamily: 'Helvetica, sans-serif',
-    fontSize: 14,
-    marginBottom: 10,
-    userSelect: 'none' as 'none',
   },
   styleButton: {
     color: '#999',
@@ -55,8 +50,12 @@ const styles: { [key: string]: CSSProperties } = {
   },
 };
 
+
 const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = '' }) => {
-  const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty());
+  const decorator = createLinkDecorator();
+  const [editorState, setEditorState] = useState(() => 
+    value ? EditorState.createWithContent(convertFromRaw(JSON.parse(value)), decorator) : EditorState.createEmpty(decorator)
+  );
   const [showURLInput, setShowURLInput] = useState(false);
   const [urlValue, setUrlValue] = useState('');
   const editorRef = useRef<Editor>(null);
@@ -113,27 +112,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
     handleChange(nextEditorState);
   };
 
-  const promptForLink = () => {
-    const selection = editorState.getSelection();
-    if (!selection.isCollapsed()) {
-      const contentState = editorState.getCurrentContent();
-      const startKey = editorState.getSelection().getStartKey();
-      const startOffset = editorState.getSelection().getStartOffset();
-      const blockWithLinkAtBeginning = contentState.getBlockForKey(startKey);
-      const linkKey = blockWithLinkAtBeginning.getEntityAt(startOffset);
 
-      let url = '';
-      if (linkKey) {
-        const linkInstance = contentState.getEntity(linkKey);
-        url = linkInstance.getData().url;
-      }
-
-      setShowURLInput(true);
-      setUrlValue(url);
-
-      setTimeout(() => document.getElementById('urlInput')?.focus(), 0);
-    }
-  };
 
   const confirmLink = (e: any) => {
     e.preventDefault();
@@ -166,43 +145,41 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
 
   return (
     <div style={styles.root} className="relative w-full h-full flex flex-col">
-      <div className="flex mb-4 space-x-2">
-        <FormatButton
-          onClick={() => handleFormat("BOLD")}
-          icon={<strong>B</strong>}
-          label="Bold"
-        />
-        <FormatButton
-          onClick={() => handleFormat("UNDERLINE")}
-          icon={<u>U</u>}
-          label="Underline"
-        />
-        <FormatButton
-          onClick={() => handleFormat("ITALIC")}
-          icon={<em>I</em>}
-          label="Italic"
-        />
-        <FormatButton
-          onClick={() => handleFormat("STRIKETHROUGH")}
-          icon={<s>S</s>}
-          label="Strikethrough"
-        />
-        <FormatButton
-          onClick={() => handleFormat("CODE")}
-          icon={<code>Code</code>}
-          label="Code"
-        />
+      <div className="flex items-center justify-between mb-4 space-x-2">
+        <div className='space-x-2'>
+          <FormatButton
+            onClick={() => handleFormat("BOLD")}
+            icon={<strong>B</strong>}
+            label="Bold"
+          />
+          <FormatButton
+            onClick={() => handleFormat("UNDERLINE")}
+            icon={<u>U</u>}
+            label="Underline"
+          />
+          <FormatButton
+            onClick={() => handleFormat("ITALIC")}
+            icon={<em>I</em>}
+            label="Italic"
+          />
+          <FormatButton
+            onClick={() => handleFormat("STRIKETHROUGH")}
+            icon={<s>S</s>}
+            label="Strikethrough"
+          />
+          <FormatButton
+            onClick={() => handleFormat("CODE")}
+            icon={<code>Code</code>}
+            label="Code"
+          />
+          <FormatButton
+            onClick={() => onAddLink(editorState, setEditorState)}
+            icon = {<span>🔗</span>}
+            label='Add Link'
+          />
+        </div>
+       
         <ColorControls editorState={editorState} onToggle={toggleColor} />
-        <FormatButton
-          onClick={promptForLink}
-          icon={<span>🔗</span>}
-          label="Add Link"
-        />
-        <FormatButton
-          onClick={removeLink}
-          icon={<span>❌</span>}
-          label="Remove Link"
-        />
       </div>
       <div style={styles.editor} onClick={focus}>
         <Editor
@@ -223,7 +200,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
             onChange={(e) => setUrlValue(e.target.value)}
             onBlur={() => setShowURLInput(false)}
             onKeyDown={(e) => e.key === 'Enter' && confirmLink(e)}
-            placeholder="Enter a URL..."
+            placeholder="Enter an URL..."
             style={{ width: '100%', padding: '8px' }}
           />
           <button onClick={confirmLink} className="ml-2 p-2 bg-blue-500 text-white rounded">

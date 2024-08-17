@@ -5,7 +5,6 @@ import EditableField from "../formComponents/EditableField";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import ColorfulEditor from "../formComponents/ColorfulEditor";
 
 const CommentSection = ({ task }: { task: ITask }) => {
   const router = useRouter();
@@ -48,7 +47,7 @@ const CommentSection = ({ task }: { task: ITask }) => {
       <div>
         <div className="mb-4 flex flex-col gap-4">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Comments</h2>
-          <div className="min-h-64 mb-8">
+          <div className="mb-8">
             <EditableField
                   initialValue={''}
                   onSave={(newValue) => handleAddComment(task.id || "", newValue)}
@@ -57,7 +56,7 @@ const CommentSection = ({ task }: { task: ITask }) => {
               />
 
           </div>
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-8">
             {comments && comments.length > 0 ? (
               comments.map((comment, index) => (
                 <div

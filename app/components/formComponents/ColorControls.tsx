@@ -13,29 +13,10 @@ const COLORS = [
   
 // Define the styles with correct `userSelect` type
 const styles: { [key: string]: CSSProperties } = {
-    root: {
-        fontFamily: 'Georgia, serif',
-        fontSize: 14,
-    },
-    editor: {
-        borderTop: '1px solid #ddd',
-        cursor: 'text',
-        fontSize: 16,
-        marginTop: 20,
-        minHeight: 400,
-        paddingTop: 20,
-    },
-    controls: {
-        fontFamily: 'Helvetica, sans-serif',
-        fontSize: 14,
-        marginBottom: 10,
-        userSelect: 'none' as 'none', // Use the appropriate UserSelect type value
-    },
     styleButton: {
         color: '#999',
         cursor: 'pointer',
         marginRight: 16,
-        padding: '2px 0',
     },
 };
 
@@ -65,10 +46,11 @@ const StyleButton: React.FC<{ label: string, style: string, active: boolean, onT
     );
   };
 
+  
 const ColorControls: React.FC<{ editorState: EditorState, onToggle: (style: string) => void }> = ({ editorState, onToggle }) => {
     const currentStyle = editorState.getCurrentInlineStyle();
     return (
-      <div style={styles.controls}>
+      <div>
         {COLORS.map(({ label, style }) => (
           <StyleButton
             key={label}
