@@ -1,6 +1,6 @@
 import { getDayOfTheWeek, getMonthName } from '@/app/utils/helper';
 import React from 'react';
-import WeeklyTaskCard from './WeeklyTaskCard';
+import TaskCard from '../../task/TaskCard';
 
 const WeekDayCard = ({ day }: { day: IDay }) => {
 
@@ -12,7 +12,7 @@ const WeekDayCard = ({ day }: { day: IDay }) => {
     <div className="w-full mt-2 md:gap-6 grid md:grid-cols-2">
       {day.tasks && day.tasks.length > 0 && (
         day.tasks.map((task) => (
-          <WeeklyTaskCard key={task.id} task={task} />
+          <TaskCard key={task.id} task={task} />
         ))
       ) }
     </div>

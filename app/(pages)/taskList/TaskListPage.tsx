@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React from 'react';
 import TaskList from '../../components/lists/TaskList';
 
 const TaskListPage = ({tasks}:{tasks: ITask[]}) => {

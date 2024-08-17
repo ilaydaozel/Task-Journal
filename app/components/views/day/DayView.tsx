@@ -1,7 +1,7 @@
 "use client";
 
 import { printStringDateDMYD } from '@/app/utils/helper';
-import DailyTaskCard from './DailyTaskCard';
+import TaskCard from '../../task/TaskCard';
 
 const DayView = ({day}: { day?: IDay }) => {
 
@@ -11,7 +11,7 @@ const DayView = ({day}: { day?: IDay }) => {
       <div className="w-4/5 grid grid-cols-1 md:grid-cols-2 gap-12">
         {day && day.tasks && day.tasks.length > 0 ? (
             day.tasks.map((task: ITask) => (
-              <DailyTaskCard key={day.id} task={task} />
+              <TaskCard key={day.id} task={task} />
             ))
           ) : (
             <p>No tasks found.</p> // Display a message if there are no tasks

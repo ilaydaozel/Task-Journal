@@ -1,4 +1,4 @@
-import TaskCard from '../views/week/WeeklyTaskCard';
+import TaskCard from "../task/TaskCard";
 
 const TasksPage = ({ tasks = [] }: { tasks?: ITask[] }) => {
   return (
