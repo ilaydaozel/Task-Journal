@@ -1,5 +1,5 @@
-import { convertFromRaw, convertToRaw, Editor, EditorState, RichUtils, DraftEditorCommand, Modifier } from 'draft-js';
-import React, { CSSProperties, useRef } from 'react';
+import React, { CSSProperties, useRef, useState } from 'react';
+import { convertFromRaw, convertToRaw, Editor, EditorState, RichUtils, Modifier, CompositeDecorator, ContentBlock, ContentState } from 'draft-js';
 import FormatButton from './FormatButton';
 import ColorControls from './ColorControls';
 
@@ -25,42 +25,75 @@ const colorStyleMap: ColorStyleMap = {
   violet: { color: 'rgba(127, 0, 255, 1.0)' },
 };
 
+const findLinkEntities = (
+  contentBlock: ContentBlock,
+  callback: (start: number, end: number) => void,
+  contentState: ContentState
+) => {
+  contentBlock.findEntityRanges(
+    (character) => {
+      const entityKey = character.getEntity();
+      return (
+        entityKey !== null &&
+        contentState.getEntity(entityKey).getType() === 'LINK'
+      );
+    },
+    callback
+  );
+};
 
-// Define the styles with correct `userSelect` type
+const Link = (props: { contentState: { getEntity: (arg0: any) => { (): any; new(): any; getData: { (): { url: any; }; new(): any; }; }; }; entityKey: any; children: React.ReactNode }) => {
+  const { url } = props.contentState.getEntity(props.entityKey).getData();
+  return (
+    <a href={url} style={{ color: 'blue', textDecoration: 'underline' }}>
+      {props.children}
+    </a>
+  );
+};
+
+
+const decorator = new CompositeDecorator([
+  {
+    strategy: findLinkEntities,
+    component: Link,
+  },
+]);
+
 const styles: { [key: string]: CSSProperties } = {
   root: {
-      fontFamily: 'Georgia, serif',
-      fontSize: 14,
-      maxHeight: '50vh',
+    fontFamily: 'Georgia, serif',
+    fontSize: 14,
+    maxHeight: '50vh',
   },
   editor: {
-      borderTop: '1px solid #ddd',
-      cursor: 'text',
-      fontSize: 16,
-      marginTop: 20,
-      paddingTop: 20,
-      minHeight: 200,
-      overflowY: 'auto', // Enable vertical scrolling
+    borderTop: '1px solid #ddd',
+    cursor: 'text',
+    fontSize: 16,
+    marginTop: 20,
+    paddingTop: 20,
+    minHeight: 200,
+    overflowY: 'auto',
   },
   controls: {
-      fontFamily: 'Helvetica, sans-serif',
-      fontSize: 14,
-      marginBottom: 10,
-      userSelect: 'none' as 'none', // Use the appropriate UserSelect type value
+    fontFamily: 'Helvetica, sans-serif',
+    fontSize: 14,
+    marginBottom: 10,
+    userSelect: 'none' as 'none',
   },
   styleButton: {
-      color: '#999',
-      cursor: 'pointer',
-      marginRight: 16,
-      padding: '2px 0',
+    color: '#999',
+    cursor: 'pointer',
+    marginRight: 16,
+    padding: '2px 0',
   },
-  };
-  
-  
+};
+
 const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = '' }) => {
-  const [editorState, setEditorState] = React.useState(() => 
-    value ? EditorState.createWithContent(convertFromRaw(JSON.parse(value))) : EditorState.createEmpty()
+  const [editorState, setEditorState] = useState(() => 
+    value ? EditorState.createWithContent(convertFromRaw(JSON.parse(value)), decorator) : EditorState.createEmpty(decorator)
   );
+  const [showURLInput, setShowURLInput] = useState(false);
+  const [urlValue, setUrlValue] = useState('');
   const editorRef = useRef<Editor>(null);
 
   const focus = () => {
@@ -68,7 +101,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
       editorRef.current.focus();
     }
   };
-  
+
   const handleChange = (state: EditorState) => {
     setEditorState(state);
     const contentState = state.getCurrentContent();
@@ -95,7 +128,6 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
     let nextContentState = editorState.getCurrentContent();
     const currentStyle = editorState.getCurrentInlineStyle();
 
-    // Remove existing color styles from the selection
     Object.keys(colorStyleMap).forEach(existingColor => {
       nextContentState = Modifier.removeInlineStyle(nextContentState, selection, existingColor);
     });
@@ -103,25 +135,73 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
     let nextEditorState = EditorState.push(editorState, nextContentState, 'change-inline-style');
 
     if (selection.isCollapsed()) {
-      // Apply each style individually
       currentStyle.forEach(style => {
         if (style) {
           nextEditorState = RichUtils.toggleInlineStyle(nextEditorState, style);
         }
       });
 
-      // Toggle the selected color style if it is not already applied
       if (!currentStyle.has(color)) {
         nextEditorState = RichUtils.toggleInlineStyle(nextEditorState, color);
       }
     } else {
-      // If the selection is not collapsed, just apply the new color style
       if (!currentStyle.has(color)) {
         nextEditorState = RichUtils.toggleInlineStyle(nextEditorState, color);
       }
     }
 
     handleChange(nextEditorState);
+  };
+
+  const promptForLink = () => {
+    const selection = editorState.getSelection();
+    if (!selection.isCollapsed()) {
+      const contentState = editorState.getCurrentContent();
+      const startKey = editorState.getSelection().getStartKey();
+      const startOffset = editorState.getSelection().getStartOffset();
+      const blockWithLinkAtBeginning = contentState.getBlockForKey(startKey);
+      const linkKey = blockWithLinkAtBeginning.getEntityAt(startOffset);
+
+      let url = '';
+      if (linkKey) {
+        const linkInstance = contentState.getEntity(linkKey);
+        url = linkInstance.getData().url;
+      }
+
+      setShowURLInput(true);
+      setUrlValue(url);
+
+      setTimeout(() => document.getElementById('urlInput')?.focus(), 0);
+    }
+  };
+
+  const confirmLink = (e: any) => {
+    e.preventDefault();
+    const contentState = editorState.getCurrentContent();
+    const contentStateWithEntity = contentState.createEntity(
+      'LINK',
+      'MUTABLE',
+      { url: urlValue }
+    );
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
+    setEditorState(
+      RichUtils.toggleLink(
+        newEditorState,
+        newEditorState.getSelection(),
+        entityKey
+      )
+    );
+    setShowURLInput(false);
+    setUrlValue('');
+    focus();
+  };
+
+  const removeLink = () => {
+    const selection = editorState.getSelection();
+    if (!selection.isCollapsed()) {
+      setEditorState(RichUtils.toggleLink(editorState, selection, null));
+    }
   };
 
   return (
@@ -152,11 +232,37 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
           icon={<code>Code</code>}
           label="Code"
         />
+        <FormatButton
+          onClick={promptForLink}
+          icon={<span>🔗</span>}
+          label="Add Link"
+        />
+        <FormatButton
+          onClick={removeLink}
+          icon={<span>❌</span>}
+          label="Remove Link"
+        />
         <ColorControls editorState={editorState} onToggle={toggleColor} />
       </div>
-      <div style={styles.editor} onClick={focus} className="w-full p-4 border rounded-md min-h-24 border-gray-300">
+      {showURLInput && (
+        <div className="mb-4">
+          <input
+            id="urlInput"
+            type="text"
+            value={urlValue}
+            onChange={(e) => setUrlValue(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && confirmLink(e)}
+            placeholder="Enter URL"
+            className="p-2 border rounded"
+          />
+          <button onClick={confirmLink} className="ml-2 p-2 bg-blue-500 text-white rounded">
+            Confirm
+          </button>
+        </div>
+      )}
+      <div style={styles.editor} onClick={focus} className="w-full h-full p-4 border rounded-md min-h-24 border-gray-300">
         <Editor
-        customStyleMap={colorStyleMap}
+          customStyleMap={colorStyleMap}
           editorState={editorState}
           onChange={handleChange}
           handleKeyCommand={handleKeyCommand}
@@ -165,8 +271,6 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
         />
       </div>
     </div>
-
-    
   );
 };
 

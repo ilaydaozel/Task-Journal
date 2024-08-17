@@ -74,7 +74,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
       ) : (
         <div className="w-full h-full flex flex-col gap-2">
           <div
-            className="w-full min-h-8 cursor-pointer p-2 border rounded-md flex-grow"
+            className="w-full h-full min-h-8 cursor-pointer p-2 border rounded-md flex-grow"
             onClick={() => isEditableWhenClicked && setEditMode(true)}
             dangerouslySetInnerHTML={{ __html: convertRawToHTML(editedValue) || placeholder }}
           />
