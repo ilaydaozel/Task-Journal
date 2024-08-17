@@ -10,7 +10,7 @@ const FormatButton: React.FC<FormatButtonProps> = ({ onClick, icon, label }) => 
   return (
     <button
       onClick={onClick}
-      className="px-2 py-1 hover:bg-todo border border-todo border-1 rounded"
+      className="px-2 py-1 border border-todo border-1 rounded cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105"
       title={label}
     >
       {icon}

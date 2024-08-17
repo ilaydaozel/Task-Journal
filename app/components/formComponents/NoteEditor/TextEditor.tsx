@@ -1,8 +1,9 @@
 import React, { CSSProperties, useRef, useState } from 'react';
-import { convertFromRaw, convertToRaw, Editor, EditorState, RichUtils, Modifier, CompositeDecorator, ContentBlock, ContentState } from 'draft-js';
+import { convertFromRaw, convertToRaw, Editor, EditorState, RichUtils, Modifier } from 'draft-js';
 import FormatButton from './FormatButton';
 import ColorControls from './ColorControls';
 import { createLinkDecorator, onAddLink } from './LinkComponent';
+import EmojiPicker from './EmojiPicker';
 
 interface TextEditorProps {
   value: string;
@@ -36,7 +37,7 @@ const styles: { [key: string]: CSSProperties } = {
   editor: {
     borderTop: '1px solid #ddd',
     cursor: 'text',
-    fontSize: '0.8rem',
+    fontSize: '1rem',
     paddingTop: '2rem',
     minHeight: '20vh',
     overflowY: 'auto',
@@ -57,6 +58,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
   );
   const [showURLInput, setShowURLInput] = useState(false);
   const [urlValue, setUrlValue] = useState('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const editorRef = useRef<Editor>(null);
 
 
@@ -111,8 +113,6 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
     handleChange(nextEditorState);
   };
 
-
-
   const confirmLink = (e: any) => {
     e.preventDefault();
     const contentState = editorState.getCurrentContent();
@@ -135,12 +135,30 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
     focus();
   };
 
-  const removeLink = () => {
+
+  const handleEmojiSelect = (emoji: string) => {
     const selection = editorState.getSelection();
-    if (!selection.isCollapsed()) {
-      setEditorState(RichUtils.toggleLink(editorState, selection, null));
+    const contentState = editorState.getCurrentContent();
+    const collapsedSelection = selection.isCollapsed();
+    let newEditorState: EditorState = editorState;
+    if (collapsedSelection) {
+       // Insert emoji at the cursor position
+       const newContentState = Modifier.insertText(
+        contentState,
+        selection,
+        emoji
+      );
+  
+      // Update the editor state
+      newEditorState = EditorState.push(
+        editorState,
+        newContentState,
+        'insert-characters'
+      ); 
     }
+    handleChange(newEditorState); // Assuming you have a way to set editor state
   };
+
 
   return (
     <div style={styles.root} className="relative w-full h-full flex flex-col">
@@ -176,10 +194,20 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
             icon = {<span>🔗</span>}
             label='Add Link'
           />
+          <FormatButton
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            
+            icon = {<span>Emoji</span>}
+            label='Emoji Picker'
+          />
         </div>
-       
         <ColorControls editorState={editorState} onToggle={toggleColor} />
       </div>
+
+      {showEmojiPicker && (
+            <EmojiPicker onSelectEmoji={handleEmojiSelect} />
+      )}
+
       <div style={styles.editor} onClick={focus}>
         <Editor
           ref={editorRef}

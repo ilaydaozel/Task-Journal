@@ -49,7 +49,7 @@ const StyleButton: React.FC<{ label: string, style: string, active: boolean, onT
     };
   
     return (
-      <span style={buttonStyle} onMouseDown={handleToggle}>
+      <span style={buttonStyle} onMouseDown={handleToggle} className="cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105">
         {label}
       </span>
     );
