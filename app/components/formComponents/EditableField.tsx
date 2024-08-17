@@ -25,17 +25,18 @@ interface EditableFieldProps {
   onSave: (newValue: string) => void;
   onDelete?: () => void;
   placeholder?: string;
+  isEditableWhenClicked?: boolean;
 }
 
 const EditableField: React.FC<EditableFieldProps> = ({
   initialValue,
   onSave,
   onDelete,
-  placeholder = ''
+  placeholder = '',
+  isEditableWhenClicked = false
 }) => {
   const [editMode, setEditMode] = useState(false);
   const [editedValue, setEditedValue] = useState(initialValue || "");
-  const editorRef = useRef<HTMLDivElement>(null);
 
   const handleSave = () => {
     if (editedValue !== initialValue) {
@@ -44,67 +45,50 @@ const EditableField: React.FC<EditableFieldProps> = ({
     setEditMode(false);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (editorRef.current && !editorRef.current.contains(event.target as Node)) {
-        handleSave();
-      }
-    };
-
-    if (editMode) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [editMode]);
 
   return (
-    <div className="w-full h-full text-left p-2 border overflow-wrap break-all text-xs min-w-10 min-h-8 relative rounded-md">
+    <div className={`w-full h-full text-left overflow-wrap break-all text-xs min-w-10 min-h-8 relative ${editMode && "p-6 border b-1 border-primary-400"}`}>
       {editMode ? (
-        <div className="relative w-full flex flex-col">
+        <div className="relative w-full h-full flex flex-col">
           <TextEditor
             value={editedValue}
             onChange={setEditedValue}
             placeholder={placeholder}
           />
-          <div className="flex gap-2 p-2 mt-2 font-bold text-md">
+          <div className="flex gap-4 p-2 mt-2 font-bold text-md">
             <button
               onClick={handleSave}
-              className={`text-inProgress`}
+              className="text-inProgress hover:scale-105"
               disabled={!editMode}
             >
               Save
             </button>
             <button
               onClick={() => setEditMode(false)}
-              className="text-text1-600"
+              className="text-text1-600 hover:scale-105"
             >
               Cancel
             </button>
           </div>
         </div>
       ) : (
-        <div className="w-full flex flex-col">
+        <div className="w-full h-full flex flex-col gap-2">
           <div
             className="w-full min-h-8 cursor-pointer p-2 border rounded-md flex-grow"
-            onClick={() => setEditMode(true)}
+            onClick={() => isEditableWhenClicked && setEditMode(true)}
             dangerouslySetInnerHTML={{ __html: convertRawToHTML(editedValue) || placeholder }}
           />
-          <div className="flex gap-2 p-2 mt-2 font-bold text-md">
+          <div className="flex gap-4 pl-2 font-bold text-md">
             <button
               onClick={() => { setEditMode(true);}}
-              className="text-primary-700"
+              className="text-primary-700 hover:scale-105"
             >
               Edit
             </button>
             {onDelete && (
               <button
                 onClick={onDelete}
-                className="text-text1-600"
+                className="text-text1-600 hover:scale-105"
               >
                 Delete
               </button>

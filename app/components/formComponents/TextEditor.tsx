@@ -34,7 +34,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
   };
 
   return (
-    <div className="relative w-full flex flex-col">
+    <div className="relative w-full h-full flex flex-col">
       <div className="flex mb-2 space-x-2">
         <button onClick={() => handleFormat("BOLD")} className="p-1 bg-gray-200 rounded">
           Bold

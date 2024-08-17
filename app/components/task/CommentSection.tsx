@@ -47,30 +47,32 @@ const CommentSection = ({ task }: { task: ITask }) => {
       <div>
         <div className="mb-4 flex flex-col gap-4">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Comments</h2>
+          <div className="h-40 mb-8">
             <EditableField
-                initialValue={''}
-                onSave={(newValue) => handleAddComment(task.id || "", newValue)}
-                placeholder="Write a comment.."
-            />
-          <ul className="mt-2 list-disc list-inside">
+                  initialValue={''}
+                  onSave={(newValue) => handleAddComment(task.id || "", newValue)}
+                  placeholder="Write a comment.."
+                  isEditableWhenClicked = {true}
+              />
+          </div>
+          <div className="flex flex-col gap-6">
             {comments && comments.length > 0 ? (
               comments.map((comment, index) => (
-                <li
+                <div
                   key={index}
-                  className="mt-1 text-gray-600 flex items-center"
-                  style={{ listStyleType: "none" }}
+                  className="text-gray-600 flex items-center"
                 >
                   <EditableField
                     initialValue={comment}
                     onSave={(newValue) => handleUpdateComment(task.id || "", index, newValue)}
                     onDelete={() => handleDeleteComment(task.id || "", index)} // Pass delete handler
                   />
-                </li>
+                </div>
               ))
             ) : (
-              <li className="text-gray-500 text-sm" style={{ listStyleType: "none" }}>No comments yet.</li>
+              <></>
             )}
-          </ul>
+          </div>
         </div>
       </div>
     </section>
