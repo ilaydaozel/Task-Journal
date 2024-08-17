@@ -1,5 +1,24 @@
 import React, { useState, useRef, useEffect } from 'react';
 import TextEditor from './TextEditor';
+import { convertFromRaw } from 'draft-js';
+import { convertToHTML } from 'draft-convert';
+
+const convertRawToHTML = (rawContent: string | null): string => {
+  if (!rawContent) return '';
+
+  try {
+    // Parse the raw JSON
+    const contentState = convertFromRaw(JSON.parse(rawContent));
+
+    // Convert ContentState to HTML
+    const html = convertToHTML(contentState);
+
+    return html;
+  } catch (e) {
+    console.error('Error converting raw content to HTML:', e);
+    return '';
+  }
+};
 
 interface EditableFieldProps {
   initialValue: string | null;
@@ -23,27 +42,6 @@ const EditableField: React.FC<EditableFieldProps> = ({
       onSave(editedValue);
     }
     setEditMode(false);
-  };
-
-  const applyFormat = (command: string, value?: string) => {
-    document.execCommand(command, false, value);
-  };
-
-  const addLink = () => {
-    const url = prompt("Enter the URL:");
-    if (url) {
-      document.execCommand('createLink', false, url);
-
-      const selection = window.getSelection();
-      if (selection && selection.anchorNode) {
-        const linkElement = selection.anchorNode.parentElement as HTMLAnchorElement;
-        if (linkElement && linkElement.tagName === 'A') {
-          linkElement.style.color = 'blue';
-          linkElement.style.textDecoration = 'underline';
-          linkElement.target = '_blank'; // Opens link in a new tab
-        }
-      }
-    }
   };
 
   useEffect(() => {
@@ -77,7 +75,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
             <button
               onClick={handleSave}
               className={`text-inProgress`}
-              disabled={!editMode} // Disable save button if not editing
+              disabled={!editMode}
             >
               Save
             </button>
@@ -94,7 +92,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
           <div
             className="w-full min-h-8 cursor-pointer p-2 border rounded-md flex-grow"
             onClick={() => setEditMode(true)}
-            dangerouslySetInnerHTML={{ __html: editedValue || placeholder }}
+            dangerouslySetInnerHTML={{ __html: convertRawToHTML(editedValue) || placeholder }}
           />
           <div className="flex gap-2 p-2 mt-2 font-bold text-md">
             <button
@@ -112,7 +110,6 @@ const EditableField: React.FC<EditableFieldProps> = ({
               </button>
             )}
           </div>
-          
         </div>
       )}
     </div>
