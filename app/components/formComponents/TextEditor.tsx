@@ -1,5 +1,6 @@
 import { convertFromRaw, convertToRaw, Editor, EditorState, RichUtils } from 'draft-js';
 import React from 'react';
+import FormatButton from './FormatButton';
 
 interface TextEditorProps {
   value: string;
@@ -36,12 +37,31 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
   return (
     <div className="relative w-full h-full flex flex-col">
       <div className="flex mb-2 space-x-2">
-        <button onClick={() => handleFormat("BOLD")} className="p-1 bg-gray-200 rounded">
-          Bold
-        </button>
-        <button onClick={() => handleFormat("UNDERLINE")} className="p-1 bg-gray-200 rounded">
-          Underline
-        </button>
+      <FormatButton
+          onClick={() => handleFormat("BOLD")}
+          icon={<strong>B</strong>}
+          label="Bold"
+        />
+        <FormatButton
+          onClick={() => handleFormat("UNDERLINE")}
+          icon={<u>U</u>}
+          label="Underline"
+        />
+        <FormatButton
+          onClick={() => handleFormat("ITALIC")}
+          icon={<em>I</em>}
+          label="Italic"
+        />
+        <FormatButton
+          onClick={() => handleFormat("STRIKETHROUGH")}
+          icon={<s>S</s>}
+          label="Strikethrough"
+        />
+        <FormatButton
+          onClick={() => handleFormat("CODE")}
+          icon={<code>Code</code>}
+          label="Code"
+        />
       </div>
       <div className="w-full p-2 border rounded-md min-h-10">
         <Editor
