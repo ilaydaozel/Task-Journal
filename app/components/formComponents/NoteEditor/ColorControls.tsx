@@ -17,6 +17,9 @@ const styles: { [key: string]: CSSProperties } = {
         color: '#999',
         cursor: 'pointer',
         marginRight: 16,
+        display: 'inline-block',
+        userSelect: 'none',
+        transition: 'color 0.3s ease, background-color 0.3s ease',
     },
 };
 
@@ -37,7 +40,13 @@ const StyleButton: React.FC<{ label: string, style: string, active: boolean, onT
       onToggle(style);
     };
   
-    const buttonStyle = active ? { ...styles.styleButton, ...colorStyleMap[style] } : styles.styleButton;
+    const buttonColor = colorStyleMap[style]?.color;
+  
+    const buttonStyle = {
+      ...styles.styleButton,
+      color: buttonColor,
+      fontWeight: active ? 'bold' : '',
+    };
   
     return (
       <span style={buttonStyle} onMouseDown={handleToggle}>

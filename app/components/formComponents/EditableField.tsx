@@ -112,7 +112,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
             onChange={setEditedValue}
             placeholder={placeholder}
           />
-          <div className="flex gap-4 mt-2 font-bold text-base">
+          <div className="flex gap-4 mt-2 font-bold text-sm">
             <button
               onClick={handleSave}
               className="text-inProgress hover:scale-105"
@@ -135,7 +135,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
             onClick={() => isEditableWhenClicked && setEditMode(true)}
             dangerouslySetInnerHTML={{ __html: convertRawToHTML(editedValue) || placeholder }}
           />
-          <div className="flex gap-4 font-bold text-base">
+          <div className="flex gap-4 font-bold text-sm">
             <button
               onClick={() => { setEditMode(true);}}
               className="text-primary-700 hover:scale-105"
