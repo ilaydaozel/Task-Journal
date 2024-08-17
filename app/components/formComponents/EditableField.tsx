@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import TextEditor from './TextEditor';
+import React, { useState} from 'react';
+import TextEditor from './NoteEditor/TextEditor';
 import { convertFromRaw } from 'draft-js';
 import { convertToHTML } from 'draft-convert';
 
