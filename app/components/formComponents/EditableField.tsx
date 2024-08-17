@@ -3,15 +3,45 @@ import TextEditor from './TextEditor';
 import { convertFromRaw } from 'draft-js';
 import { convertToHTML } from 'draft-convert';
 
+interface ColorStyleMap {
+  [key: string]: {
+    color: string;
+  };
+}
+
+const colorStyleMap: ColorStyleMap = {
+  red: { color: 'rgba(255, 0, 0, 1.0)' },
+  orange: { color: 'rgba(255, 127, 0, 1.0)' },
+  yellow: { color: 'rgba(180, 180, 0, 1.0)' },
+  green: { color: 'rgba(0, 180, 0, 1.0)' },
+  blue: { color: 'rgba(0, 0, 255, 1.0)' },
+  indigo: { color: 'rgba(75, 0, 130, 1.0)' },
+  violet: { color: 'rgba(127, 0, 255, 1.0)' },
+};
+
 const convertRawToHTML = (rawContent: string | null): string => {
   if (!rawContent) return '';
-
   try {
     // Parse the raw JSON
     const contentState = convertFromRaw(JSON.parse(rawContent));
 
     // Convert ContentState to HTML
-    const html = convertToHTML(contentState);
+    const html = convertToHTML({
+      styleToHTML: (style) => {
+        // Handle custom styles
+        if (colorStyleMap[style]) {
+          return <span style={{ color: colorStyleMap[style].color }} />;
+        }
+        return undefined;
+      },
+      blockToHTML: (block) => {
+        // Handle custom block types if needed
+        if (block.type === 'blockquote') {
+          return <blockquote />;
+        }
+        return undefined;
+      },
+    })(contentState);
 
     return html;
   } catch (e) {

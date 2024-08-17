@@ -1,4 +1,4 @@
-import React, { CSSProperties, useRef, useState } from 'react';
+import React, { CSSProperties, useRef, useState, useEffect } from 'react';
 import { convertFromRaw, convertToRaw, Editor, EditorState, RichUtils, Modifier, CompositeDecorator, ContentBlock, ContentState } from 'draft-js';
 import FormatButton from './FormatButton';
 import ColorControls from './ColorControls';
@@ -25,39 +25,6 @@ const colorStyleMap: ColorStyleMap = {
   violet: { color: 'rgba(127, 0, 255, 1.0)' },
 };
 
-const findLinkEntities = (
-  contentBlock: ContentBlock,
-  callback: (start: number, end: number) => void,
-  contentState: ContentState
-) => {
-  contentBlock.findEntityRanges(
-    (character) => {
-      const entityKey = character.getEntity();
-      return (
-        entityKey !== null &&
-        contentState.getEntity(entityKey).getType() === 'LINK'
-      );
-    },
-    callback
-  );
-};
-
-const Link = (props: { contentState: { getEntity: (arg0: any) => { (): any; new(): any; getData: { (): { url: any; }; new(): any; }; }; }; entityKey: any; children: React.ReactNode }) => {
-  const { url } = props.contentState.getEntity(props.entityKey).getData();
-  return (
-    <a href={url} style={{ color: 'blue', textDecoration: 'underline' }}>
-      {props.children}
-    </a>
-  );
-};
-
-
-const decorator = new CompositeDecorator([
-  {
-    strategy: findLinkEntities,
-    component: Link,
-  },
-]);
 
 const styles: { [key: string]: CSSProperties } = {
   root: {
@@ -89,18 +56,11 @@ const styles: { [key: string]: CSSProperties } = {
 };
 
 const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = '' }) => {
-  const [editorState, setEditorState] = useState(() => 
-    value ? EditorState.createWithContent(convertFromRaw(JSON.parse(value)), decorator) : EditorState.createEmpty(decorator)
-  );
+  const [editorState, setEditorState] = useState<EditorState>(EditorState.createEmpty());
   const [showURLInput, setShowURLInput] = useState(false);
   const [urlValue, setUrlValue] = useState('');
   const editorRef = useRef<Editor>(null);
 
-  const focus = () => {
-    if (editorRef.current) {
-      editorRef.current.focus();
-    }
-  };
 
   const handleChange = (state: EditorState) => {
     setEditorState(state);
@@ -232,6 +192,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
           icon={<code>Code</code>}
           label="Code"
         />
+        <ColorControls editorState={editorState} onToggle={toggleColor} />
         <FormatButton
           onClick={promptForLink}
           icon={<span>🔗</span>}
@@ -242,34 +203,34 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
           icon={<span>❌</span>}
           label="Remove Link"
         />
-        <ColorControls editorState={editorState} onToggle={toggleColor} />
+      </div>
+      <div style={styles.editor} onClick={focus}>
+        <Editor
+          ref={editorRef}
+          editorState={editorState}
+          onChange={handleChange}
+          handleKeyCommand={handleKeyCommand}
+          placeholder={placeholder}
+          customStyleMap={colorStyleMap}
+        />
       </div>
       {showURLInput && (
-        <div className="mb-4">
+        <div className="absolute top-full left-0 mt-2 p-2 bg-white border border-gray-300 shadow rounded">
           <input
             id="urlInput"
             type="text"
             value={urlValue}
             onChange={(e) => setUrlValue(e.target.value)}
+            onBlur={() => setShowURLInput(false)}
             onKeyDown={(e) => e.key === 'Enter' && confirmLink(e)}
-            placeholder="Enter URL"
-            className="p-2 border rounded"
+            placeholder="Enter a URL..."
+            style={{ width: '100%', padding: '8px' }}
           />
           <button onClick={confirmLink} className="ml-2 p-2 bg-blue-500 text-white rounded">
             Confirm
           </button>
         </div>
       )}
-      <div style={styles.editor} onClick={focus} className="w-full h-full p-4 border rounded-md min-h-24 border-gray-300">
-        <Editor
-          customStyleMap={colorStyleMap}
-          editorState={editorState}
-          onChange={handleChange}
-          handleKeyCommand={handleKeyCommand}
-          placeholder={placeholder}
-          ref={editorRef}
-        />
-      </div>
     </div>
   );
 };
