@@ -27,7 +27,7 @@ const SideSection = ({ task }: { task: ITask }) => {
   };
 
   return (
-    <div className="md:w-2/5 w-full mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="md:w-1/5 w-full mx-auto p-6 bg-white rounded-lg shadow-lg">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div className="mb-4">

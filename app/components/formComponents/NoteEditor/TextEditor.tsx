@@ -36,9 +36,8 @@ const styles: { [key: string]: CSSProperties } = {
   editor: {
     borderTop: '1px solid #ddd',
     cursor: 'text',
-    fontSize: '1rem',
-    marginTop: 20,
-    paddingTop: 20,
+    fontSize: '0.8rem',
+    paddingTop: '2rem',
     minHeight: '20vh',
     overflowY: 'auto',
   },

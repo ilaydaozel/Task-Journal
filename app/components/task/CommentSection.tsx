@@ -46,7 +46,7 @@ const CommentSection = ({ task }: { task: ITask }) => {
     <section className="w-full mx-auto p-6 bg-white rounded-lg shadow-lg">
       <div>
         <div className="mb-4 flex flex-col gap-4">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Comments</h2>
+          <h2 className="text-xl font-semibold text-gray-600 mb-4">Comments</h2>
           <div className="mb-8">
             <EditableField
                   initialValue={''}

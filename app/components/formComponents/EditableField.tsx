@@ -60,6 +60,17 @@ const convertRawToHTML = (rawContent: string | null): string => {
   }
 };
 
+// Function to check if a string is valid JSON
+const isValidJson = (value: string): boolean => {
+  try {
+    JSON.parse(value);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+
 interface EditableFieldProps {
   initialValue: string | null;
   onSave: (newValue: string) => void;
@@ -73,10 +84,16 @@ const EditableField: React.FC<EditableFieldProps> = ({
   onSave,
   onDelete,
   placeholder = '',
-  isEditableWhenClicked = false
+  isEditableWhenClicked = false,
 }) => {
   const [editMode, setEditMode] = useState(false);
-  const [editedValue, setEditedValue] = useState(initialValue || "");
+  const [editedValue, setEditedValue] = useState(() => {
+    // Initialize state based on contentType
+      if (initialValue) {
+        return isValidJson(initialValue) ? initialValue : JSON.stringify({ blocks: [{ key: 'a', text: initialValue, type: 'unstyled' }], entityMap: {} });
+      }
+      return initialValue || "";
+    });
 
   const handleSave = () => {
     if (editedValue !== initialValue) {
@@ -89,13 +106,13 @@ const EditableField: React.FC<EditableFieldProps> = ({
   return (
     <div className={`w-full h-full text-left overflow-wrap break-all text-xs min-w-10 min-h-24 relative ${editMode && "p-6 border b-1 border-primary-400"}`}>
       {editMode ? (
-        <div className="relative w-full h-full flex flex-col">
+        <div className="relative w-full h-full flex flex-col gap-2">
           <TextEditor
             value={editedValue}
             onChange={setEditedValue}
             placeholder={placeholder}
           />
-          <div className="flex gap-4 p-2 mt-2 font-bold text-base">
+          <div className="flex gap-4 mt-2 font-bold text-base">
             <button
               onClick={handleSave}
               className="text-inProgress hover:scale-105"
@@ -114,11 +131,11 @@ const EditableField: React.FC<EditableFieldProps> = ({
       ) : (
         <div className="w-full h-full flex flex-col gap-2">
           <div
-            className="w-full h-full min-h-16 cursor-pointer p-2 border rounded-md flex-grow text-base"
+            className="w-full h-full min-h-16 cursor-pointer px-4 py-8 border flex-grow text-sm"
             onClick={() => isEditableWhenClicked && setEditMode(true)}
             dangerouslySetInnerHTML={{ __html: convertRawToHTML(editedValue) || placeholder }}
           />
-          <div className="flex gap-4 pl-2 font-bold text-base">
+          <div className="flex gap-4 font-bold text-base">
             <button
               onClick={() => { setEditMode(true);}}
               className="text-primary-700 hover:scale-105"
