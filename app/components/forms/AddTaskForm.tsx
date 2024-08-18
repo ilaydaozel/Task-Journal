@@ -3,27 +3,32 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import Button from '../formComponents/Button';
-import { handleApiResponse } from '@/app/utils/helper';
+import { handleApiResponse, printStringDateDM } from '@/app/utils/helper';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import InputField from '../formComponents/InputField';
-import CustomCalendar from '../formComponents/CustomCalendar'; // Adjust the import path if necessary
+import CustomCalendar from '../formComponents/CustomCalendar';
+import SelectField from '../formComponents/SelectField'; // A hypothetical select field component
 
 interface AddTaskFormProps {
   isOpen: boolean;
   onClose: () => void;
-  years: IYear[]; // Add years prop to pass to CustomCalendar
+  years: IYear[];
 }
 
 const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
+    type: 'TASK', // Default task type
+    tags: '',
+    parentTaskId: '',
   });
-  const [selectedWorkedOnDays, setSelectedWorkedOnDays] = useState<IDay[]>([]); // State for worked on days
+  const [selectedWorkedOnDays, setSelectedWorkedOnDays] = useState<IDay[]>([]);
+  const [timeslots, setTimeslots] = useState<ITimeSlot[]>([]);
   const router = useRouter();
+  const [availableTasks, setAvailableTasks] = useState<ITask[]>([]);
 
-  // Check if the element exists before setting the app element
   useEffect(() => {
     const appElement = document.getElementById('navbar');
     if (appElement) {
@@ -31,7 +36,7 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
     }
   }, []);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -43,27 +48,46 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
     setSelectedWorkedOnDays(days);
   };
 
+  const handleTimeslotChange = (index: number, field: 'startTime' | 'endTime', value: string) => {
+    const newTimeslots = [...timeslots];
+    newTimeslots[index] = {
+      ...newTimeslots[index],
+      [field]: new Date(value),
+    };
+    setTimeslots(newTimeslots);
+  };
+
+  /*
+  const addTimeslot = (dayId: string) => {
+    setTimeslots([...timeslots, { dayId, startTime: new Date(), endTime: new Date() }]);
+  };
+*/
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = axios.post('/api/task/createTask', {
         ...formData,
         workedOnDays: selectedWorkedOnDays,
+        timeslots,
+        tags: formData.tags.split(',').map(tag => tag.trim()), // Convert tags string to an array
       });
       await handleApiResponse(response, router, "Add successful");
       setSelectedWorkedOnDays([]);
+      setTimeslots([]);
       setFormData({
         name: '',
         description: '',
+        type: 'TASK',
+        tags: '',
+        parentTaskId: '',
       });
-      onClose(); // Close the modal after successful submission
+      onClose();
     } catch (error) {
       console.error('Error adding task:', error);
-      const errorMessage = (error as Error).message; // Cast 'error' to 'Error' type
+      const errorMessage = (error as Error).message;
       alert('An error occurred while adding the task: ' + errorMessage);
     }
   };
-
 
   return (
     <Modal
@@ -93,6 +117,34 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
                   onChange={handleChange}
                   type='textarea'
                 />
+                <InputField 
+                  label="Tags (comma-separated)"
+                  name="tags"
+                  value={formData.tags}
+                  onChange={handleChange}
+                />
+                <SelectField
+                  label="Task Type"
+                  name="type"
+                  value={formData.type}
+                  onChange={handleChange}
+                  options={[
+                    { value: 'TASK', label: 'Task' },
+                    { value: 'NOTE', label: 'Note' },
+                    { value: 'MEETING', label: 'Meeting' },
+                    { value: 'HABIT_TRACKER', label: 'Habit Tracker' },
+                  ]}
+                />
+                <SelectField
+                  label="Parent Task"
+                  name="parentTaskId"
+                  value={formData.parentTaskId ? formData.parentTaskId : ''}
+                  onChange={handleChange}
+                  options={[
+                    { value: '', label: 'None' },
+                    ...availableTasks.map(task => ({ value: task.id? task.id: "", label: task.name })),
+                  ]}               
+                />
               </div>
               <div className='flex flex-col gap-4 w-full'>
                 <label className='text-sm font-semibold'>Assign Day</label>
@@ -101,6 +153,25 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
                   allowMultipleSelection={true} 
                   onDaySelect={handleWorkedOnDaysSelect} 
                 />
+                {selectedWorkedOnDays && selectedWorkedOnDays.map((day, index) => (
+                  <div key={index} className='flex flex-col gap-2'>
+                    <label>Timeslot for {printStringDateDM(day.date)}</label>
+                    <InputField
+                      name={`timeslot-start-${index}`}
+                      label="Start Time"
+                      type="datetime-local"
+                      value={timeslots[index]?.startTime.toISOString().slice(0, 16) || ''}
+                      onChange={(e) => handleTimeslotChange(index, 'startTime', e.target.value)}
+                    />
+                    <InputField
+                      name={`timeslot-end-${index}`}
+                      label="End Time"
+                      type="datetime-local"
+                      value={timeslots[index]?.endTime.toISOString().slice(0, 16) || ''}
+                      onChange={(e) => handleTimeslotChange(index, 'endTime', e.target.value)}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
             <div className='flex gap-4 items-center justify-end'>
