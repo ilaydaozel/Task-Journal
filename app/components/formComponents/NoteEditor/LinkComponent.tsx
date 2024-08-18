@@ -39,47 +39,59 @@ export const createLinkDecorator = () =>
   ]);
 
 // Function to handle adding a link
-export const onAddLink = (editorState: EditorState) => {
+export const onAddLink = (editorState: EditorState) : EditorState => {
+  const contentState = editorState.getCurrentContent();
+  const selection = editorState.getSelection();
+  const startKey = selection.getStartKey();
+  const endKey = selection.getEndKey();
+
+  // Get the selected text
+  let selectedText = '';
+  if (!selection.isCollapsed()) {
+    const startBlock = contentState.getBlockForKey(startKey);
+    const endBlock = contentState.getBlockForKey(endKey);
+    if (startBlock && endBlock) {
+      const startOffset = selection.getStartOffset();
+      const endOffset = selection.getEndOffset();
+      selectedText = startBlock.getText().slice(startOffset, endOffset);
+    }
+  }
+
   const linkUrl = window.prompt("Add link http:// ");
   if (linkUrl) {
-    const displayLink = window.prompt("Display Text");
-    if (displayLink) {
-      const contentState = editorState.getCurrentContent();
-      const selection = editorState.getSelection();
-      const collapsedSelection = selection.isCollapsed();
-      
-      // Create a new LINK entity
-      const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', { url: linkUrl });
-      const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-      
-      let newContentState;
-      if (collapsedSelection) {
-        // Insert the link text if selection is collapsed
-        newContentState = Modifier.insertText(
-          contentStateWithEntity,
-          selection,
-          displayLink,
-          undefined,
-          entityKey
-        );
-      } else {
-        // Apply the entity to the selected text
-        newContentState = Modifier.applyEntity(
-          contentStateWithEntity,
-          selection,
-          entityKey
-        );
-      }
-      
-      // Update the editor state
-      const newEditorState = EditorState.push(
-        editorState,
-        newContentState,
-        'apply-entity'
+    const displayLink = selectedText || linkUrl; // Use selected text if available, otherwise fallback to URL
+
+    const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', { url: linkUrl });
+    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+
+    let newContentState;
+    if (selection.isCollapsed()) {
+      // Insert the link text if selection is collapsed
+      newContentState = Modifier.insertText(
+        contentStateWithEntity,
+        selection,
+        displayLink,
+        undefined,
+        entityKey
       );
-      return newEditorState;
+    } else {
+      // Apply the entity to the selected text
+      newContentState = Modifier.replaceText(
+        contentStateWithEntity,
+        selection,
+        displayLink,
+        undefined,
+        entityKey
+      );
     }
-    return editorState;
+
+    // Update the editor state
+    const newEditorState = EditorState.push(
+      editorState,
+      newContentState,
+      'apply-entity'
+    );
+    return newEditorState;
   }
   return editorState;
 };
