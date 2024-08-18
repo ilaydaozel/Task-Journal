@@ -18,9 +18,9 @@ interface ITask {
   deadlineAt: Date | null;
   status: string;
   comments: string[];
-  tags: string[];
+  tags: ITag[];
+  tagIds: string[];
   type: TaskType;
-  
   timeslots: ITimeSlot[];
   workedOnDays: IDay[];
   workedOnDayIds: string[];
@@ -30,12 +30,31 @@ interface ITask {
   workedOnMonthIds: string[];
   workedOnYears: IYear[];
   workedOnYearIds: string[];
-
   parentTask?: ITask;
   parentTaskId?: string;
   subTasks: ITask[];
-  
   private: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface ITag {
+  id?: string;
+  name: string;
+  tasks: ITask[];
+  taskIds: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface ITimeSlot {
+  id?: string;
+  task: ITask;
+  taskId: string;
+  day: IDay;
+  dayId: string;
+  startTime: Date;
+  endTime: Date;
   createdAt: Date;
   updatedAt: Date;
 }

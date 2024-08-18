@@ -18,6 +18,17 @@ export async function POST(request: Request) {
     } = body;
     
     try {
+         // Create or find tags
+         const tagRecords = await Promise.all(tags.map(async (tag: { id?: string, name: string }) => {
+            if (tag.id) {
+                // Find existing tag
+                return prisma.tag.findUnique({ where: { id: tag.id } });
+            } else {
+                // Create new tag
+                return prisma.tag.create({ data: { name: tag.name } });
+            }
+        }));
+
         // Create the task
         const task = await prisma.task.create({
             data: {
@@ -30,7 +41,9 @@ export async function POST(request: Request) {
                 workedOnMonthIds: workedOnMonths?.length ? workedOnMonths.map((month: IMonth) => month.id) : [],
                 workedOnYearIds: workedOnYears?.length ? workedOnYears.map((year: IYear) => year.id) : [],
                 type,
-                tags: tags || [],
+                tags: {
+                    connect: tagRecords.map(tag => ({ id: tag.id })),
+                },
                 parentTaskId: parentTaskId || null, // Set parent task if provided
             },
         });

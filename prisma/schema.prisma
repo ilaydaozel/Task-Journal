@@ -33,9 +33,12 @@ model Task {
   deadlineAt        DateTime?
   status            TaskStatus @default(TODO)
   comments          String[]
-  tags              String[]
   type              TaskType @default(TASK)
-  
+
+  // tag relationship
+  tags              Tag[] @relation(fields: [tagIds], references: [id])
+  tagIds            String[]   @db.ObjectId
+
   // time relationships
   timeslots         TimeSlot[] @relation("TaskTimeSlots")
   workedOnDays      Day[]    @relation(fields: [workedOnDayIds], references: [id])
@@ -51,10 +54,21 @@ model Task {
   parentTask        Task?     @relation("TaskParentChild", fields: [parentTaskId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   parentTaskId      String?   @db.ObjectId
   subTasks          Task[]    @relation("TaskParentChild")
+
   // if a task is private
   private           Boolean   @default(false)
+  
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+}
+
+model Tag {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique
+  taskIds String[] @db.ObjectId
+  tasks   Task[]   @relation(fields: [taskIds], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model TimeSlot {
