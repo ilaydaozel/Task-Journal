@@ -20,7 +20,7 @@ const styles: { [key: string]: CSSProperties } = {
     borderTop: '1px solid #ddd',
     cursor: 'text',
     fontSize: '1rem',
-    paddingTop: '1rem',
+    paddingTop: '4rem',
     minHeight: '20vh',
     overflowY: 'auto',
     lineHeight: '1.2rem',
@@ -138,61 +138,62 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
 
   return (
     <div style={styles.root} className="relative w-full h-full flex flex-col gap-2">
-      <div className="flex items-center lg:flex-row flex-col justify-between mb-4 gap-4">
-        <div className="flex gap-2">
-              {Object.keys(fontSizeStyleMap).map(size => (
-                <FormatButton
-                  key={size}
-                  onClick={() => handleFormat(size)}
-                  icon={<span>{size}</span>}
-                  label={`Font size ${size}`}
-                />
-              ))}
-          </div>
-        <div className='flex gap-1'>
-          <FormatButton
-            onClick={() => handleFormat("BOLD")}
-            icon={<strong>B</strong>}
-            label="Bold"
-          />
-          <FormatButton
-            onClick={() => handleFormat("UNDERLINE")}
-            icon={<u>U</u>}
-            label="Underline"
-          />
-          <FormatButton
-            onClick={() => handleFormat("ITALIC")}
-            icon={<em>I</em>}
-            label="Italic"
-          />
-          <FormatButton
-            onClick={() => handleFormat("STRIKETHROUGH")}
-            icon={<s>S</s>}
-            label="Strikethrough"
-          />
-          <FormatButton
-            onClick={() => handleFormat("CODE")}
-            icon={<code>Code</code>}
-            label="Code"
-          />
-          <FormatButton
-            onClick={() => onAddLink(editorState, setEditorState)}
-            icon={<span>🔗</span>}
-            label='Add Link'
-          />
-          <FormatButton
+      <div className='flex flex-col gap-4'>
+        <div className="flex items-center lg:flex-row flex-col justify-between gap-4">
+          <div className="flex gap-1 flex-wrap justify-center">
+                {Object.keys(fontSizeStyleMap).map(size => (
+                  <FormatButton
+                    key={size}
+                    onClick={() => handleFormat(size)}
+                    icon={<span>{size}</span>}
+                    label={`Font size ${size}`}
+                  />
+                ))}
+            </div>
+          <div className='flex gap-1 flex-wrap justify-center'>
+            <FormatButton
+              onClick={() => handleFormat("BOLD")}
+              icon={<strong>B</strong>}
+              label="Bold"
+            />
+            <FormatButton
+              onClick={() => handleFormat("UNDERLINE")}
+              icon={<u>U</u>}
+              label="Underline"
+            />
+            <FormatButton
+              onClick={() => handleFormat("ITALIC")}
+              icon={<em>I</em>}
+              label="Italic"
+            />
+            <FormatButton
+              onClick={() => handleFormat("STRIKETHROUGH")}
+              icon={<s>S</s>}
+              label="Strikethrough"
+            />
+            <FormatButton
+              onClick={() => handleFormat("CODE")}
+              icon={<code>Code</code>}
+              label="Code"
+            />
+            <FormatButton
+              onClick={() => onAddLink(editorState, setEditorState)}
+              icon={<span>🔗</span>}
+              label='Add Link'
+            />
+            <FormatButton
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            icon={<span>Emoji</span>}
-            label='Emoji Picker'
-          />
+              icon={<span>Emoji</span>}
+              label='Emoji Picker'
+            />
+          </div>
+          <ColorControls editorState={editorState} onToggle={toggleColor} />
         </div>
-        <ColorControls editorState={editorState} onToggle={toggleColor} />
+
+        {showEmojiPicker && (
+          <EmojiPicker onSelectEmoji={handleEmojiSelect} />
+        )}
       </div>
-
-      {showEmojiPicker && (
-        <EmojiPicker onSelectEmoji={handleEmojiSelect} />
-      )}
-
       <div style={styles.editor} onClick={focus}>
         <Editor
           ref={editorRef}

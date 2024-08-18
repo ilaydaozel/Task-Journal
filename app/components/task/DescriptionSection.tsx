@@ -28,7 +28,7 @@ const DescriptionSection = ({ task }: { task: ITask }) => {
   };
 
   return (
-    <section className="md:w-4/5 w-full mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <section className="md:w-4/5 w-full mx-auto pt-12 p-6 bg-white rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold text-text1-600 mb-4">{task?.name}</h1>
       <div className="mb-4">
             <div className="mt-2 py-10 text-gray-700">

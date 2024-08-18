@@ -28,6 +28,9 @@ const convertRawToHTML = (rawContent: string | null): string => {
         if (block.type === 'blockquote') {
           return <blockquote />;
         }
+        if (block.type === 'unstyled' && !block.text.trim()) {
+          return <br />;
+        }
         return undefined;
       },
       entityToHTML: (entity, originalText) => {
@@ -91,9 +94,9 @@ const EditableField: React.FC<EditableFieldProps> = ({
 
 
   return (
-    <div className={`w-full h-full text-left overflow-wrap break-all text-xs min-w-10 min-h-24 relative ${editMode && "p-6 border b-1 border-primary-400"}`}>
+    <div className={`w-full h-full text-left p-6 rounded-md border border-text1-200 overflow-wrap break-all text-xs min-w-10 min-h-24 relative ${editMode && "p-6 border shadow-md rounded border-primary-400"}`}>
       {editMode ? (
-        <div className="relative w-full h-full flex flex-col gap-2">
+        <div className="relative w-full h-full flex flex-col gap-12">
           <TextEditor
             value={editedValue}
             onChange={setEditedValue}
@@ -118,7 +121,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
       ) : (
         <div className="w-full h-full flex flex-col gap-2">
           <div
-            className="w-full h-full min-h-16 cursor-pointer px-4 py-8 border flex-grow text-sm"
+            className="w-full h-full min-h-16 cursor-pointer pb-6 flex-grow text-sm"
             onClick={() => isEditableWhenClicked && setEditMode(true)}
             style={{lineHeight: '1.2rem'}}
             dangerouslySetInnerHTML={{ __html: convertRawToHTML(editedValue) || placeholder }}

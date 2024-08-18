@@ -23,7 +23,7 @@ const emojis = [
 
 const EmojiPicker: React.FC<EmojiPickerProps> = ({ onSelectEmoji }) => {
   return (
-    <div className="flex flex-wrap py-2 gap-2 bg-text1-100">
+    <div className="flex flex-wrap p-2 gap-2 bg-text1-100 rounded-md">
       {emojis.map((emoji, index) => (
         <span
           key={index}
