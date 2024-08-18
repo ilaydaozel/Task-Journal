@@ -32,13 +32,12 @@ const colorStyleMap: ColorStyleMap = {
 const styles: { [key: string]: CSSProperties } = {
   root: {
     fontSize: '0.8rem',
-    maxHeight: '50vh',
   },
   editor: {
     borderTop: '1px solid #ddd',
     cursor: 'text',
     fontSize: '1rem',
-    paddingTop: '2rem',
+    paddingTop: '1rem',
     minHeight: '20vh',
     overflowY: 'auto',
   },
@@ -161,9 +160,9 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
 
 
   return (
-    <div style={styles.root} className="relative w-full h-full flex flex-col">
-      <div className="flex items-center justify-between mb-4 space-x-2">
-        <div className='space-x-2'>
+    <div style={styles.root} className="relative w-full h-full flex flex-col gap-2">
+      <div className="flex items-center md:flex-row flex-col justify-between mb-4 gap-4">
+        <div className='flex gap-1'>
           <FormatButton
             onClick={() => handleFormat("BOLD")}
             icon={<strong>B</strong>}
@@ -205,7 +204,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
       </div>
 
       {showEmojiPicker && (
-            <EmojiPicker onSelectEmoji={handleEmojiSelect} />
+        <EmojiPicker onSelectEmoji={handleEmojiSelect} />
       )}
 
       <div style={styles.editor} onClick={focus}>
