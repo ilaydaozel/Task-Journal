@@ -27,7 +27,13 @@ const colorStyleMap: ColorStyleMap = {
   violet: { color: 'rgba(127, 0, 255, 1.0)' },
 };
 
-
+const fontSizeStyleMap: { [key: string]: CSSProperties } = {
+  xs: { fontSize: '0.6rem' },
+  sm: { fontSize: '0.8rem' },
+  md: { fontSize: '1rem' },
+  lg: { fontSize: '1.2rem' },
+  xl: { fontSize: '1.6rem' },
+};
 
 const styles: { [key: string]: CSSProperties } = {
   root: {
@@ -49,7 +55,6 @@ const styles: { [key: string]: CSSProperties } = {
   },
 };
 
-
 const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = '' }) => {
   const decorator = createLinkDecorator();
   const [editorState, setEditorState] = useState(() => 
@@ -60,7 +65,6 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const editorRef = useRef<Editor>(null);
 
-
   const handleChange = (state: EditorState) => {
     setEditorState(state);
     const contentState = state.getCurrentContent();
@@ -69,8 +73,13 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
   };
 
   const handleFormat = (command: string) => {
-    const newState = RichUtils.toggleInlineStyle(editorState, command);
-    handleChange(newState);
+    if (Object.keys(fontSizeStyleMap).includes(command)) {
+      const newState = RichUtils.toggleInlineStyle(editorState, command);
+      handleChange(newState);
+    } else {
+      const newState = RichUtils.toggleInlineStyle(editorState, command);
+      handleChange(newState);
+    }
   };
 
   const handleKeyCommand = (command: string, state: EditorState) => {
@@ -134,35 +143,40 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
     focus();
   };
 
-
   const handleEmojiSelect = (emoji: string) => {
     const selection = editorState.getSelection();
     const contentState = editorState.getCurrentContent();
     const collapsedSelection = selection.isCollapsed();
     let newEditorState: EditorState = editorState;
     if (collapsedSelection) {
-       // Insert emoji at the cursor position
        const newContentState = Modifier.insertText(
         contentState,
         selection,
         emoji
       );
-  
-      // Update the editor state
       newEditorState = EditorState.push(
         editorState,
         newContentState,
         'insert-characters'
       ); 
     }
-    handleChange(newEditorState); // Assuming you have a way to set editor state
+    handleChange(newEditorState);
   };
-
 
   return (
     <div style={styles.root} className="relative w-full h-full flex flex-col gap-2">
       <div className="flex items-center md:flex-row flex-col justify-between mb-4 gap-4">
         <div className='flex gap-1'>
+        <div className="flex gap-2">
+            {Object.keys(fontSizeStyleMap).map(size => (
+              <FormatButton
+                key={size}
+                onClick={() => handleFormat(size)}
+                icon={<span>{size}</span>}
+                label={`Font size ${size}`}
+              />
+            ))}
+          </div>
           <FormatButton
             onClick={() => handleFormat("BOLD")}
             icon={<strong>B</strong>}
@@ -190,13 +204,12 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
           />
           <FormatButton
             onClick={() => onAddLink(editorState, setEditorState)}
-            icon = {<span>🔗</span>}
+            icon={<span>🔗</span>}
             label='Add Link'
           />
           <FormatButton
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            
-            icon = {<span>Emoji</span>}
+            icon={<span>Emoji</span>}
             label='Emoji Picker'
           />
         </div>
@@ -214,7 +227,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
           onChange={handleChange}
           handleKeyCommand={handleKeyCommand}
           placeholder={placeholder}
-          customStyleMap={colorStyleMap}
+          customStyleMap={fontSizeStyleMap}
         />
       </div>
       {showURLInput && (
