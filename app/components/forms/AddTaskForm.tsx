@@ -1,5 +1,3 @@
-"use client";
-
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import Button from '../formComponents/Button';
@@ -9,19 +7,21 @@ import { useRouter } from 'next/navigation';
 import InputField from '../formComponents/InputField';
 import CustomCalendar from '../formComponents/CustomCalendar';
 import SelectField from '../formComponents/SelectField'; // A hypothetical select field component
+import TagSelectField from '../formComponents/TagSelectField';
 
 interface AddTaskFormProps {
   isOpen: boolean;
   onClose: () => void;
   years: IYear[];
+  tags: ITag[];
 }
 
-const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
+const AddTaskForm = ({ isOpen, onClose, years, tags}: AddTaskFormProps) => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     type: 'TASK', // Default task type
-    tags: '',
+    tags: [] as string[], // Update to handle tag IDs
     parentTaskId: '',
   });
   const [selectedWorkedOnDays, setSelectedWorkedOnDays] = useState<IDay[]>([]);
@@ -57,11 +57,6 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
     setTimeslots(newTimeslots);
   };
 
-  /*
-  const addTimeslot = (dayId: string) => {
-    setTimeslots([...timeslots, { dayId, startTime: new Date(), endTime: new Date() }]);
-  };
-*/
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -69,7 +64,6 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
         ...formData,
         workedOnDays: selectedWorkedOnDays,
         timeslots,
-        tags: formData.tags.split(',').map(tag => tag.trim()), // Convert tags string to an array
       });
       await handleApiResponse(response, router, "Add successful");
       setSelectedWorkedOnDays([]);
@@ -78,7 +72,7 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
         name: '',
         description: '',
         type: 'TASK',
-        tags: '',
+        tags: [],
         parentTaskId: '',
       });
       onClose();
@@ -87,6 +81,13 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
       const errorMessage = (error as Error).message;
       alert('An error occurred while adding the task: ' + errorMessage);
     }
+  };
+
+  const handleTagChange = (selectedTagIds: string[]) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      tags: selectedTagIds,
+    }));
   };
 
   return (
@@ -117,11 +118,12 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
                   onChange={handleChange}
                   type='textarea'
                 />
-                <InputField 
-                  label="Tags (comma-separated)"
+                <TagSelectField
+                  label="Tags"
                   name="tags"
                   value={formData.tags}
-                  onChange={handleChange}
+                  options={tags.map(tag => ({ value: tag.id? tag.id: '', label: tag.name }))}
+                  onChange={handleTagChange}
                 />
                 <SelectField
                   label="Task Type"
@@ -142,8 +144,8 @@ const AddTaskForm = ({ isOpen, onClose, years }: AddTaskFormProps) => {
                   onChange={handleChange}
                   options={[
                     { value: '', label: 'None' },
-                    ...availableTasks.map(task => ({ value: task.id? task.id: "", label: task.name })),
-                  ]}               
+                    ...availableTasks.map(task => ({ value: task.id? task.id : '', label: task.name })),
+                  ]}
                 />
               </div>
               <div className='flex flex-col gap-4 w-full'>

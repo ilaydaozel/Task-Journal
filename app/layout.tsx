@@ -7,6 +7,7 @@ import Loading from "./loading";
 import Navbar from "./components/navbar/Navbar";
 import getAllYears from "./actions/year/getAllYears";
 import getCurrentDateObjects from "./actions/date/getCurrentDateObjects";
+import getAllTags from "./actions/tag/getAllTags";
 export const dynamic = 'force-dynamic';
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,13 +26,14 @@ export default async function RootLayout({
   const utcDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()));
   const currentDateObjects = await getCurrentDateObjects({date: utcDate});
   const years = await getAllYears();
+  const tags = await getAllTags();
 
   return (
   <html lang="en">
     <body className={inter.className}>      
     <Suspense fallback={<Loading />}>
       <ToasterProvider />
-      <Navbar currentDate={currentDateObjects} years={years}></Navbar>
+      <Navbar currentDate={currentDateObjects} years={years} tags={tags}></Navbar>
       <div className="bg-bg-50 text-text1-800">
         {children}
       </div>

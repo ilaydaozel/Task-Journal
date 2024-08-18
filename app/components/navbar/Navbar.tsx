@@ -7,7 +7,7 @@ import AddTaskForm from "../forms/AddTaskForm";
 import { getLocalStorageItem, isSameDay, setLocalStorageItem } from "@/app/utils/localStorageUtils";
 
 
-const Navbar = async ({currentDate, years}: {currentDate: IDayDetails, years: IYear[]}) => {
+const Navbar = async ({currentDate, years, tags}: {currentDate: IDayDetails, years: IYear[], tags:ITag[]}) => {
   const [navbarOpen, setNavbarOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -71,7 +71,7 @@ const Navbar = async ({currentDate, years}: {currentDate: IDayDetails, years: IY
           )}
           <div className="w-fit">
                 <PlusCircleIcon className='text-primary-600 h-8 w-8 hover:scale-110' onClick={openModal} />   
-                <AddTaskForm isOpen={isModalOpen} onClose={closeModal} years={years} />
+                <AddTaskForm isOpen={isModalOpen} onClose={closeModal} years={years} tags={tags} />
             </div>  
         </div>
         <div className="menu hidden md:block md:w-auto" id="navbar">
@@ -83,7 +83,7 @@ const Navbar = async ({currentDate, years}: {currentDate: IDayDetails, years: IY
             ))}
             <div className="w-fit">
                 <PlusCircleIcon className='text-primary-600 h-8 w-8 hover:scale-110' onClick={openModal} />   
-                <AddTaskForm isOpen={isModalOpen} onClose={closeModal} years={years} />
+                <AddTaskForm isOpen={isModalOpen} onClose={closeModal} years={years} tags={tags} />
             </div>  
           </ul>
         </div>
