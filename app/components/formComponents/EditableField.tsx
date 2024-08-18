@@ -7,6 +7,7 @@ import { colorStyleMap, fontSizeStyleMap } from './NoteEditor/style';
 
 const convertRawToHTML = (rawContent: string | null): string => {
   if (!rawContent) return '';
+  console.log(rawContent);
   try {
     // Parse the raw JSON
     const contentState = convertFromRaw(JSON.parse(rawContent));

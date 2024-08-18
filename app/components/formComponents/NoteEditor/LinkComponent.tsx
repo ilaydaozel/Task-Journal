@@ -1,5 +1,7 @@
-import { ContentBlock, ContentState, CompositeDecorator, EditorState, Modifier, SelectionState } from 'draft-js';
+import React from 'react';
+import { ContentBlock, ContentState, CompositeDecorator, EditorState, Modifier } from 'draft-js';
 
+// Strategy to find LINK entities
 const findLinkEntities = (
   contentBlock: ContentBlock,
   callback: (start: number, end: number) => void,
@@ -17,7 +19,8 @@ const findLinkEntities = (
   );
 };
 
-const Link = (props: { contentState: { getEntity: (arg0: any) => { (): any; new(): any; getData: { (): { url: any; }; new(): any; }; }; }; entityKey: any; children: React.ReactNode }) => {
+// Link component to render the link
+const Link = (props: { contentState: ContentState; entityKey: any; children: React.ReactNode }) => {
   const { url } = props.contentState.getEntity(props.entityKey).getData();
   return (
     <a href={url} style={{ color: 'blue', textDecoration: 'underline' }} target="_blank" rel="noopener noreferrer">
@@ -26,13 +29,7 @@ const Link = (props: { contentState: { getEntity: (arg0: any) => { (): any; new(
   );
 };
 
-const decorator = new CompositeDecorator([
-  {
-    strategy: findLinkEntities,
-    component: Link,
-  },
-]);
-
+// Create a decorator for handling links
 export const createLinkDecorator = () =>
   new CompositeDecorator([
     {
@@ -41,24 +38,25 @@ export const createLinkDecorator = () =>
     },
   ]);
 
-export const onAddLink = (editorState: EditorState, setEditorState: (editorState: EditorState) => void) => {
-  let linkUrl = window.prompt("Add link http:// ");
+// Function to handle adding a link
+export const onAddLink = (editorState: EditorState) => {
+  const linkUrl = window.prompt("Add link http:// ");
   if (linkUrl) {
-    let displayLink = window.prompt("Display Text");
+    const displayLink = window.prompt("Display Text");
     if (displayLink) {
       const contentState = editorState.getCurrentContent();
       const selection = editorState.getSelection();
-
-      // Check if the selection is collapsed
       const collapsedSelection = selection.isCollapsed();
-      const currentContent = contentState.createEntity('LINK', 'MUTABLE', { url: linkUrl });
-      const entityKey = currentContent.getLastCreatedEntityKey();
-
+      
+      // Create a new LINK entity
+      const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', { url: linkUrl });
+      const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+      
       let newContentState;
       if (collapsedSelection) {
-        // Insert the link if the selection is collapsed
+        // Insert the link text if selection is collapsed
         newContentState = Modifier.insertText(
-          contentState,
+          contentStateWithEntity,
           selection,
           displayLink,
           undefined,
@@ -67,18 +65,21 @@ export const onAddLink = (editorState: EditorState, setEditorState: (editorState
       } else {
         // Apply the entity to the selected text
         newContentState = Modifier.applyEntity(
-          contentState,
+          contentStateWithEntity,
           selection,
           entityKey
         );
       }
-
+      
+      // Update the editor state
       const newEditorState = EditorState.push(
         editorState,
         newContentState,
         'apply-entity'
       );
-      setEditorState(EditorState.createWithContent(newContentState, decorator));
+      return newEditorState;
     }
+    return editorState;
   }
+  return editorState;
 };

@@ -38,8 +38,6 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
   const [editorState, setEditorState] = useState(() =>
     value ? EditorState.createWithContent(convertFromRaw(JSON.parse(value)), decorator) : EditorState.createEmpty(decorator)
   );
-  const [showURLInput, setShowURLInput] = useState(false);
-  const [urlValue, setUrlValue] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const editorRef = useRef<Editor>(null);
 
@@ -52,6 +50,11 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
 
   const handleFormat = (command: string) => {
     const newState = RichUtils.toggleInlineStyle(editorState, command);
+    handleChange(newState);
+  };
+
+  const handleAddLink = () => {
+    const newState = onAddLink(editorState);
     handleChange(newState);
   };
 
@@ -92,28 +95,6 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
     }
 
     handleChange(nextEditorState);
-  };
-
-  const confirmLink = (e: any) => {
-    e.preventDefault();
-    const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity(
-      'LINK',
-      'MUTABLE',
-      { url: urlValue }
-    );
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-    const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
-    setEditorState(
-      RichUtils.toggleLink(
-        newEditorState,
-        newEditorState.getSelection(),
-        entityKey
-      )
-    );
-    setShowURLInput(false);
-    setUrlValue('');
-    focus();
   };
 
   const handleEmojiSelect = (emoji: string) => {
@@ -177,7 +158,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
               label="Code"
             />
             <FormatButton
-              onClick={() => onAddLink(editorState, setEditorState)}
+              onClick={() => handleAddLink()}
               icon={<span>🔗</span>}
               label='Add Link'
             />
@@ -204,20 +185,6 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
           customStyleMap={{ ...colorStyleMap, ...fontSizeStyleMap }}
         />
       </div>
-      {showURLInput && (
-        <div className="absolute top-full left-0 mt-2 p-2 bg-white border border-gray-300 shadow rounded">
-          <input
-            id="urlInput"
-            type="text"
-            value={urlValue}
-            onChange={(e) => setUrlValue(e.target.value)}
-            onBlur={() => setShowURLInput(false)}
-            onKeyDown={(e) => e.key === 'Enter' && confirmLink(e)}
-            placeholder="Enter an URL..."
-            style={{ width: '100%', padding: '8px' }}
-          />
-        </div>
-      )}
     </div>
   );
 };
