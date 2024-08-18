@@ -4,36 +4,13 @@ import FormatButton from './FormatButton';
 import ColorControls from './ColorControls';
 import { createLinkDecorator, onAddLink } from './LinkComponent';
 import EmojiPicker from './EmojiPicker';
+import { colorStyleMap, fontSizeStyleMap } from './style';
 
 interface TextEditorProps {
   value: string;
   onChange: (newValue: string) => void;
   placeholder?: string;
 }
-
-interface ColorStyleMap {
-  [key: string]: {
-    color: string;
-  };
-}
-
-const colorStyleMap: ColorStyleMap = {
-  red: { color: 'rgba(255, 0, 0, 1.0)' },
-  orange: { color: 'rgba(255, 127, 0, 1.0)' },
-  yellow: { color: 'rgba(180, 180, 0, 1.0)' },
-  green: { color: 'rgba(0, 180, 0, 1.0)' },
-  blue: { color: 'rgba(0, 0, 255, 1.0)' },
-  indigo: { color: 'rgba(75, 0, 130, 1.0)' },
-  violet: { color: 'rgba(127, 0, 255, 1.0)' },
-};
-
-const fontSizeStyleMap: { [key: string]: CSSProperties } = {
-  xs: { fontSize: '0.6rem' },
-  sm: { fontSize: '0.8rem' },
-  md: { fontSize: '1rem' },
-  lg: { fontSize: '1.2rem' },
-  xl: { fontSize: '1.6rem' },
-};
 
 const styles: { [key: string]: CSSProperties } = {
   root: {
@@ -46,6 +23,7 @@ const styles: { [key: string]: CSSProperties } = {
     paddingTop: '1rem',
     minHeight: '20vh',
     overflowY: 'auto',
+    lineHeight: '1.2rem',
   },
   styleButton: {
     color: '#999',
@@ -57,7 +35,7 @@ const styles: { [key: string]: CSSProperties } = {
 
 const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = '' }) => {
   const decorator = createLinkDecorator();
-  const [editorState, setEditorState] = useState(() => 
+  const [editorState, setEditorState] = useState(() =>
     value ? EditorState.createWithContent(convertFromRaw(JSON.parse(value)), decorator) : EditorState.createEmpty(decorator)
   );
   const [showURLInput, setShowURLInput] = useState(false);
@@ -73,13 +51,8 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
   };
 
   const handleFormat = (command: string) => {
-    if (Object.keys(fontSizeStyleMap).includes(command)) {
-      const newState = RichUtils.toggleInlineStyle(editorState, command);
-      handleChange(newState);
-    } else {
-      const newState = RichUtils.toggleInlineStyle(editorState, command);
-      handleChange(newState);
-    }
+    const newState = RichUtils.toggleInlineStyle(editorState, command);
+    handleChange(newState);
   };
 
   const handleKeyCommand = (command: string, state: EditorState) => {
@@ -165,18 +138,18 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
 
   return (
     <div style={styles.root} className="relative w-full h-full flex flex-col gap-2">
-      <div className="flex items-center md:flex-row flex-col justify-between mb-4 gap-4">
-        <div className='flex gap-1'>
+      <div className="flex items-center lg:flex-row flex-col justify-between mb-4 gap-4">
         <div className="flex gap-2">
-            {Object.keys(fontSizeStyleMap).map(size => (
-              <FormatButton
-                key={size}
-                onClick={() => handleFormat(size)}
-                icon={<span>{size}</span>}
-                label={`Font size ${size}`}
-              />
-            ))}
+              {Object.keys(fontSizeStyleMap).map(size => (
+                <FormatButton
+                  key={size}
+                  onClick={() => handleFormat(size)}
+                  icon={<span>{size}</span>}
+                  label={`Font size ${size}`}
+                />
+              ))}
           </div>
+        <div className='flex gap-1'>
           <FormatButton
             onClick={() => handleFormat("BOLD")}
             icon={<strong>B</strong>}
@@ -227,7 +200,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
           onChange={handleChange}
           handleKeyCommand={handleKeyCommand}
           placeholder={placeholder}
-          customStyleMap={fontSizeStyleMap}
+          customStyleMap={{ ...colorStyleMap, ...fontSizeStyleMap }}
         />
       </div>
       {showURLInput && (
@@ -242,9 +215,6 @@ const TextEditor: React.FC<TextEditorProps> = ({ value, onChange, placeholder = 
             placeholder="Enter an URL..."
             style={{ width: '100%', padding: '8px' }}
           />
-          <button onClick={confirmLink} className="ml-2 p-2 bg-blue-500 text-white rounded">
-            Confirm
-          </button>
         </div>
       )}
     </div>

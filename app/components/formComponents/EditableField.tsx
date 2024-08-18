@@ -2,27 +2,11 @@ import React, { useState} from 'react';
 import TextEditor from './NoteEditor/TextEditor';
 import { convertFromRaw } from 'draft-js';
 import { convertToHTML } from 'draft-convert';
+import { colorStyleMap, fontSizeStyleMap } from './NoteEditor/style';
 
-
-interface ColorStyleMap {
-  [key: string]: {
-    color: string;
-  };
-}
-
-const colorStyleMap: ColorStyleMap = {
-  red: { color: 'rgba(255, 0, 0, 1.0)' },
-  orange: { color: 'rgba(255, 127, 0, 1.0)' },
-  yellow: { color: 'rgba(180, 180, 0, 1.0)' },
-  green: { color: 'rgba(0, 180, 0, 1.0)' },
-  blue: { color: 'rgba(0, 0, 255, 1.0)' },
-  indigo: { color: 'rgba(75, 0, 130, 1.0)' },
-  violet: { color: 'rgba(127, 0, 255, 1.0)' },
-};
 
 const convertRawToHTML = (rawContent: string | null): string => {
   if (!rawContent) return '';
-  console.log(rawContent);
   try {
     // Parse the raw JSON
     const contentState = convertFromRaw(JSON.parse(rawContent));
@@ -30,11 +14,14 @@ const convertRawToHTML = (rawContent: string | null): string => {
     // Convert ContentState to HTML
     const html = convertToHTML({
       styleToHTML: (style) => {
-        // Handle custom styles
+        const styleObject: React.CSSProperties = {};
         if (colorStyleMap[style]) {
-          return <span style={{ color: colorStyleMap[style].color }} />;
+          styleObject.color = colorStyleMap[style].color;
         }
-        return undefined;
+        if (fontSizeStyleMap[style]) {
+          styleObject.fontSize = fontSizeStyleMap[style].fontSize;
+        }
+        return <span style={styleObject} />;
       },
       blockToHTML: (block) => {
         // Handle custom block types if needed
@@ -133,6 +120,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
           <div
             className="w-full h-full min-h-16 cursor-pointer px-4 py-8 border flex-grow text-sm"
             onClick={() => isEditableWhenClicked && setEditMode(true)}
+            style={{lineHeight: '1.2rem'}}
             dangerouslySetInnerHTML={{ __html: convertRawToHTML(editedValue) || placeholder }}
           />
           <div className="flex gap-4 font-bold text-sm">
